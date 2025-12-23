@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import './TopBar.css';
-import TopBarButton from './TopBarButton';
+import TopBarButton from '../../TopBarButton';
 import ThemeToggle from '../../ThemeChanger';
 
 export function TopBar() {

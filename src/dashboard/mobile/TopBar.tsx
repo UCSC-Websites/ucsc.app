@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import "./TopBar.css";
-import TopBarButton from "./TopBarButton";
+import TopBarButton from "../../TopBarButton";
 import { Context } from "../../Context";
 
 export function TopBar() {

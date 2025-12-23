@@ -68,7 +68,7 @@ async def get_all_menus(day_offset: int = 0):
     return menus
 
 if __name__ == '__main__':
-    uvicorn.run('pp')
+    uvicorn.run('server:api', host='0.0.0.0', port=8200, reload=True)
 
 
 
