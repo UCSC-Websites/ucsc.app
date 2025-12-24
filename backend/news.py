@@ -6,177 +6,142 @@ from fastapi import FastAPI, Request, HTTPException
 import urllib.parse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import news, AI
 from typing import Optional
-# from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
+import requests, bs4
 
 
 router = APIRouter()
 
-@router.get("/rss_press_releases")
-async def get_rss_press_releases():
-    feed_url = "http://news.ucsc.edu/rss/press_releases_page.xml"
-    try:
-        feed = feedparser.parse(feed_url)
-        return {
-            "feed": [
-                {
-                    "title": entry.title,
-                    "link": entry.link,
-                    "published": entry.published,
-                    "summary": entry.summary,
-                }
-                for entry in feed.entries
-            ]
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-
 """
-Engineering
-Name 	RSS URL
-Engineering 	http://news.ucsc.edu/rss/engineering.xml
-Applied Mathematics and Statistics 	http://news.ucsc.edu/rss/applied_math_stats.xml
-Biomolecular Engineering 	http://news.ucsc.edu/rss/biomolecular_engineering.xml
-Computer Engineering 	http://news.ucsc.edu/rss/computer_engineering.xml
-Computer Science 	http://news.ucsc.edu/rss/computer_science.xml
-Electrical Engineering 	http://news.ucsc.edu/rss/electrical_engineering.xml
-Technology and Information Management 	http://news.ucsc.edu/rss/tech_inform_mngmt.xml
+new
+Campus News                             https://news.ucsc.edu/rss  or https://news.ucsc.edu/wp-json/wp/v2/posts/
+Arts & Culture                          https://news.ucsc.edu/topics/arts-culture/rss              https://news.ucsc.edu/?_topics=arts-culture
+Climate & Sustainability                https://news.ucsc.edu/topics/climate-sustainability/rss    https://news.ucsc.edu/?_topics=climate-sustainability
+Earth & Space                           https://news.ucsc.edu/topics/earth-space/rss               https://news.ucsc.edu/?_topics=earth-space
+Health                                  https://news.ucsc.edu/topics/health/rss                    https://news.ucsc.edu/?_topics=health
+Social Justice & Community              https://news.ucsc.edu/topics/social-justice-community/rss  https://news.ucsc.edu/?_topics=social-justice-community
+Student Experience                      https://news.ucsc.edu/topics/student-experience/rss        https://news.ucsc.edu/?_topics=student-experience
+Technology                              https://news.ucsc.edu/topics/technology/rss                https://news.ucsc.edu/?_topics=technology
+Baskin Engineering Undergrad Newsletter https://undergrad.engineering.ucsc.edu/rss                 
+BE Community News                       https://engineering.ucsc.edu/topics/news/rss         
+
+the news.ucsc.edu rss feeds have the title, link, summary but not the date
+the date is only accessible in the ?_topic= api response. For those sites, use both to get the api.
 """
 
-@router.get("/rss_engineering")
-async def get_rss_engineering():
-    feed_url = "http://news.ucsc.edu/rss/engineering.xml"
-    try:
-        feed = feedparser.parse(feed_url)
-        return {
-            "feed": [
-                {
-                    "title": entry.title,
-                    "link": entry.link,
-                    "published": entry.published,
-                    "summary": entry.summary,
-                }
-                for entry in feed.entries
-            ]
+async def getRSSFeedWithScraping(topic: str) -> list[dict]:
+    # make a request to the topic page, and extract the title and dates
+    response: requests.Response = requests.post(
+        'https://news.ucsc.edu/wp-json/facetwp/v1/refresh',
+        headers={
+            'Referer': f'https://news.ucsc.edu/?_topics={topic}',
+            'content-type': 'application/json',
+        },
+        json={
+            "action": "facetwp_refresh",
+            "data": {
+                "facets": {"topics": [topic]},
+                "frozen_facets": {},
+                "http_params": {"get": {"_topics": topic}, "uri": "", "url_vars": []},
+                "template": "explore_stories",
+                "extras": {"sort": "default", "per_page": 100},
+                "soft_refresh": 0,
+                "is_bfcache": 1,
+                "first_load": 0,
+                "paged": 1
+            }
         }
-    except Exception as e:
-        return {"error": str(e)}
+    )
     
+    api_data = response.json()
+    soup: bs4.BeautifulSoup = bs4.BeautifulSoup(api_data["template"], 'lxml')
 
-@router.get("/rss_applied_math_stats")
-async def get_rss_applied_math_stats():
-    feed_url = "http://news.ucsc.edu/rss/applied_math_stats.xml"
-    try:
-        feed = feedparser.parse(feed_url)
-        return {
-            "feed": [
-                {
-                    "title": entry.title,
-                    "link": entry.link,
-                    "published": entry.published,
-                    "summary": entry.summary,
-                }
-                for entry in feed.entries
-            ]
-        }
-    except Exception as e:
-        return {"error": str(e)}
-    
-@router.get("/rss_biomolecular_engineering")
-async def get_rss_biomolecular_engineering():
-    feed_url = "http://news.ucsc.edu/rss/biomolecular_engineering.xml"
-    try:
-        feed = feedparser.parse(feed_url)
-        return {
-            "feed": [
-                {
-                    "title": entry.title,
-                    "link": entry.link,
-                    "published": entry.published,
-                    "summary": entry.summary,
-                }
-                for entry in feed.entries
-            ]
-        }
-    except Exception as e:
-        return {"error": str(e)}
-    
-@router.get("/rss_computer_engineering")
-async def get_rss_computer_engineering():
-    feed_url = "http://news.ucsc.edu/rss/computer_engineering.xml"
-    try:
-        feed = feedparser.parse(feed_url)
-        return {
-            "feed": [
-                {
-                    "title": entry.title,
-                    "link": entry.link,
-                    "published": entry.published,
-                    "summary": entry.summary,
-                }
-                for entry in feed.entries
-            ]
-        }
-    except Exception as e:
-        return {"error": str(e)}
-    
-@router.get("/rss_computer_science")
-async def get_rss_computer_science():
-    feed_url = "http://news.ucsc.edu/rss/computer_science.xml"
-    try:
-        feed = feedparser.parse(feed_url)
-        return {
-            "feed": [
-                {
-                    "title": entry.title,
-                    "link": entry.link,
-                    "published": entry.published,
-                    "summary": entry.summary,
-                }
-                for entry in feed.entries
-            ]
-        }
-    except Exception as e:
-        return {"error": str(e)}
-    
-@router.get("/rss_electrical_engineering")
-async def get_rss_electrical_engineering():
-    feed_url = "http://news.ucsc.edu/rss/electrical_engineering.xml"
-    try:
-        feed = feedparser.parse(feed_url)
-        return {
-            "feed": [
-                {
-                    "title": entry.title,
-                    "link": entry.link,
-                    "published": entry.published,
-                    "summary": entry.summary,
-                }
-                for entry in feed.entries
-            ]
-        }
-    except Exception as e:
-        return {"error": str(e)}
+    resultArticles = soup.find_all(class_='fwpl-result')
+    articleToDate: dict[str, str] = {}
+    for article in resultArticles:
+        title: str = article.find(class_='ucsc-explore-stories__title').get_text(strip=True)
+        date: str = article.find(class_='ucsc-explore-stories__date').get_text(strip=True)
+        
+        articleToDate[title] = date
 
-@router.get("/rss_technology_and_information_management")
-async def get_rss_technology_and_information_management():
-    feed_url = "http://news.ucsc.edu/rss/tech_inform_mngmt.xml"
-    try:
-        feed = feedparser.parse(feed_url)
-        return {
-            "feed": [
-                {
-                    "title": entry.title,
-                    "link": entry.link,
-                    "published": entry.published,
-                    "summary": entry.summary,
-                }
-                for entry in feed.entries
-            ]
+   
+    # extract stuff out of the rss feed
+    feed = feedparser.parse(f'https://news.ucsc.edu/topics/{topic}/rss')
+    return [
+        {
+            "title": entry.title,
+            "link": entry.link,
+            "summary": entry.summary,
+            "published": articleToDate[entry.title]
         }
-    except Exception as e:
-        return {"error": str(e)}
+        for entry in feed.entries if entry.title in articleToDate
+    ]
+
+async def getRSSFeed(url: str):
+    feed = feedparser.parse(url)
+    return [
+        {
+            "title": entry.title,
+            "link": entry.link,
+            "summary": bs4.BeautifulSoup(entry.summary, 'lxml').get_text(strip=True).replace(' ...Read more', '...'),
+            "published": entry.published
+        }
+        for entry in feed.entries
+    ]
+
+
     
+@router.get("/rss/artsculture")
+async def getRSSArtsCulture():
+    return await getRSSFeedWithScraping('arts-culture')
+
+@router.get("/rss/climate-sustainability")
+async def getRSSClimateSustainability():
+    return await getRSSFeedWithScraping('climate-sustainability')
+
+@router.get("/rss/earth-space")
+async def getRSSEarthSpace():
+    return await getRSSFeedWithScraping('earth-space')
+
+@router.get("/rss/health")
+async def getRSSHealth():
+    return await getRSSFeedWithScraping('health')
+
+@router.get("/rss/social-justice-community")
+async def getRSSSocialJusticeCommunity():
+    return await getRSSFeedWithScraping('social-justice-community')
+
+@router.get("/rss/student-experience")
+async def getRSSStudentExperience():
+    return await getRSSFeedWithScraping('student-experience')
+
+@router.get("/rss/technology")
+async def getRSSTechnology():
+    return await getRSSFeedWithScraping('technology')
+
+@router.get("/rss/newsletter")
+async def getNewsLetter():
+    return await getRSSFeed('https://undergrad.engineering.ucsc.edu/rss')
+
+@router.get("/rss/be-news")
+async def getBENews():
+    return await getRSSFeed('https://engineering.ucsc.edu/topics/news/rss')
+
+@router.get("/rss/campus-news")
+async def getCampusNews():
+    # this endpoint returns a list of the latest posts on the webpage
+    # category 1 is "campus news" (see https://news.ucsc.edu/wp-json/wp/v2/categories)
+    # filter out all news that isnt in that category
+    response: requests.Response = requests.get('https://news.ucsc.edu/wp-json/wp/v2/posts/')
+    apiData = response.json()
+    campusNews = list(filter(lambda x: 1 in x["categories"], apiData))
+    return [
+        {
+            "title": entry["title"]["rendered"],
+            "link": entry["link"],
+            "summary": bs4.BeautifulSoup(entry["excerpt"]["rendered"], 'lxml').get_text(strip=True),
+            "published": entry["date"]
+        }
+        for entry in campusNews
+    ]
