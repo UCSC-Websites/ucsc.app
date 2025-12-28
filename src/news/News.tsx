@@ -47,7 +47,7 @@ const RssFeed = () => {
 		setSelectedFeeds(selected);
 		localStorage.setItem("selectedFeeds", JSON.stringify(selected));
 	};
-	
+
 	useEffect(() => {
 		setLoading(true);
 		setError(false);
@@ -60,9 +60,15 @@ const RssFeed = () => {
 			}
 
 			try {
-				const encodedCategories = selectedFeeds.map(f => encodeURIComponent(f)).join(',');
-				const results = await fetch(`${BASE_API_URL}/rss?categories=${encodedCategories}`).then(res => res.json())
+				// instead of shoving everything into query parameters, encode the filters into 
+				// a bitmask on a 16-bit int. 
+				let encoded = 0x00;
+				for (let i = 0; i < FEEDS.length; i++) {
+					if (selectedFeeds.includes(FEEDS[i]))
+						encoded |= 0x01 << i;
+				}
 
+				const results = await fetch(`${BASE_API_URL}/rss?categories=${encoded}`).then(res => res.json())
 				const allItems: FeedItem[] = [].concat(...results);
 				allItems.sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime());
 
