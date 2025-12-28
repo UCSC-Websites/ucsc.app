@@ -6,6 +6,8 @@ import { Error } from "../Loading";
 import { BASE_API_URL } from "../constants";
 import NewsCard from "./NewsCard";
 import { Context } from "../Context";
+import NewsSidebar from "./NewsSidebar";
+import NewsFilter from "./NewsFilter";
 
 type FeedItem = {
 	title: string;
@@ -28,7 +30,7 @@ const FEEDS = [
 	"Baskin Community News",
 ];
 
-const RssFeed = () => {
+export default function RssFeed() {
 	const ctx = useContext(Context);
 
 	const [selectedFeeds, setSelectedFeeds] = useState<string[]>(() => {
@@ -89,26 +91,15 @@ const RssFeed = () => {
 			{ctx!.mobile ? <MobileTopBar /> : <DesktopTopBar />}
 
 			<div className="RssFeedMain">
-				<div className="SideBar">
-					<h2>Categories</h2>
-					{FEEDS.map((feed) => (
-						<div key={feed} className="IndividualCheckBox">
-							<label>
-								<input
-									type="checkbox"
-									checked={selectedFeeds.includes(feed)}
-									onChange={() => toggleFeed(feed)}
-								/>
-								{feed}
-							</label>
-						</div>
-					))}
-				</div>
-
+				{!ctx!.mobile ? <NewsSidebar {...{ FEEDS, selectedFeeds, toggleFeed }} /> : <></>}
 
 				{error ? <Error>Error Loading News</Error> :
 					<div className="RSS_Feed">
-						<h1>UCSC News</h1>
+						<div style={{ textAlign: 'left' }}>
+							<h1 style={{marginBottom: '-33px'}}>UCSC News</h1>
+							{ctx!.mobile ? <NewsFilter {...{ FEEDS, selectedFeeds, toggleFeed }} /> : <></>}
+						</div>
+
 						{loading && <div style={{ fontSize: 20, margin: 0, padding: 0 }}>Loading...</div>}
 						{selectedItems.map((item, i) => (
 							<NewsCard key={i} {...item} />
@@ -118,5 +109,3 @@ const RssFeed = () => {
 		</>
 	);
 };
-
-export default RssFeed;

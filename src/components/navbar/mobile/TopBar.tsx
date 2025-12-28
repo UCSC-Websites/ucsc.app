@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Context } from "../../../Context";
 import NavBarButtons from "../NavbarButtons";
+import ThemeToggle from "../../../ThemeChanger";
 import "./TopBar.css";
 
 export function TopBar() {
@@ -16,7 +17,10 @@ export function TopBar() {
 					<span />
 					<span />
 				</div>
-				<div className="app-bar__title">ucsc.info</div>
+				{/* <div className="app-bar__title">ucsc.info</div> */}
+				<div className="nav-bar__theme-toggle">
+					<ThemeToggle />
+				</div>
 			</header>
 
 			<aside className={`drawer ${ctx?.isDrawerOpen ? 'open' : ''}`}>
