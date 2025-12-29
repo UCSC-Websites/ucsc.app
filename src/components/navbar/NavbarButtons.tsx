@@ -15,7 +15,10 @@ export default function NavBarButtons({onClick}: NavBarButtonProps) {
 			<Link
 				key={Math.random() * 1000} // replace later
 				to={path}
-				style={{ textDecoration: 'none' }}
+				style={{ 
+					textDecoration: 'none', 
+					color: 'var(--gold)',
+				}}
 				onClick={onClick}
 			>
 				{name}

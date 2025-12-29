@@ -19,8 +19,11 @@ function App() {
 		localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
 	);
 	useEffect(() => {
-		setMobile(window.innerWidth < 600);
-	}, []);
+		const onResize = () => setMobile(window.innerWidth < 600);
+		onResize();
+		window.addEventListener('resize', onResize);
+		return () => window.removeEventListener('resize', onResize);
+	}, [setMobile]);
 	useEffect(() => {
 		document.documentElement.setAttribute("data-theme", theme);
 		localStorage.setItem("theme", theme);
