@@ -7,7 +7,7 @@ import Search from './Search.tsx';
 import './Courses.css';
 import Filters from "./Filters.tsx";
 import { BASE_API_URL } from "../constants.ts";
-import {Loading} from "../Loading.tsx";
+import {Loading} from "../components/loading/Loading.tsx";
 
 interface Course {
 	status: string;

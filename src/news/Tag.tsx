@@ -6,7 +6,7 @@ export default function Tag({name}: {name: string}) {
 
 	return (
 		<span style={{
-			background: '#ffd700',
+			background: 'var(--gold)',
 			marginRight: '2px',
 			color: '#000000',
 			borderRadius: '10px',

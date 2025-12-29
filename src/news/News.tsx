@@ -1,13 +1,14 @@
 import { useEffect, useState, useContext } from "react";
 import { TopBar as MobileTopBar } from "../components/navbar/mobile/TopBar";
 import { TopBar as DesktopTopBar } from "../components/navbar/desktop/TopBar";
-import "./News.css";
-import { Error } from "../Loading";
+import { Error } from "../components/loading/Loading";
 import { BASE_API_URL } from "../constants";
 import NewsCard from "./NewsCard";
 import { Context } from "../Context";
 import NewsSidebar from "./NewsSidebar";
 import NewsFilter from "./NewsFilter";
+import { Loading } from "../components/loading/Loading";
+import "./News.css";
 
 type FeedItem = {
 	title: string;
@@ -71,11 +72,7 @@ export default function RssFeed() {
 				}
 
 				const results = await fetch(`${BASE_API_URL}/rss?categories=${encoded}`).then(res => res.json())
-				const allItems: FeedItem[] = [].concat(...results);
-				allItems.sort((a, b) => new Date(b.published).getTime() - new Date(a.published).getTime());
-
-				// setAllItems(allItems);
-				setSelectedItems(allItems);
+				setSelectedItems([].concat(...results) as FeedItem[]);
 			} catch (error) {
 				setError(true);
 				console.error("Failed to fetch feeds:", error);
@@ -102,9 +99,9 @@ export default function RssFeed() {
 							</div>
 						) : (<h1>UCSC News</h1>)}
 
-						{loading && <div style={{ fontSize: 20, margin: 0, padding: 0 }}>Loading...</div>}
+						{loading && <div style={{ display: 'flex', minHeight: '60vh', gridColumn: '1 / -1', }}><Loading /></div>}
 						{selectedItems.map((item, i) => (
-							<NewsCard key={i} {...item} />
+							<NewsCard key={i} index={i} {...item} />
 						))}
 					</div>}
 			</div>

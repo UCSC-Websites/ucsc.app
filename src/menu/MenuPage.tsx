@@ -7,8 +7,8 @@ import {Menu as DesktopMenu} from './desktop/Menu';
 import DateHeader from "./DateHeader";
 import {getAllLocationMenus, type Menu} from "./api";
 import './Menu.css'
-import '../Loading.css';
-import {Error, Loading} from "../Loading";
+import '../components/loading/Loading.css';
+import {Error, Loading} from "../components/loading/Loading";
 import {useContext, useEffect, useState} from "react";
 
 const months = [

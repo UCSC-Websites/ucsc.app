@@ -3,16 +3,14 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     font-size: 24px;
     color: #333;
 }
 
 .loading-spinner {
     border: 16px solid #f3f3f3;
-    /* Light grey */
-    border-top: 16px solid #3498db;
-    /* Blue */
+    border-top: 16px solid var(--gold);
     border-radius: 50%;
     width: 100px;
     height: 100px;

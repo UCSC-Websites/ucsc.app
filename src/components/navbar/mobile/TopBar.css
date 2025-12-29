@@ -71,7 +71,7 @@
 .hamburger span {
     display: block;
     height: 4px;
-    background-color: gold;
+    background-color: var(--gold);
     border-radius: 2px;
     transition: 0.3s;
     transform-origin: left center;

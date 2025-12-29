@@ -4,6 +4,7 @@
   --card-bg: #ffffff;
   --link-color: #1a0dab;
   --shadow-hover: drop-shadow(0 0 2em #646cffaa);
+  --gold: #ffd700;
 
   transition: background-color 0.3s ease, color 0.3s ease;
 }
