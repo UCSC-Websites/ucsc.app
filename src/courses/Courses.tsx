@@ -4,7 +4,7 @@ import { TopBar as DesktopTopBar } from "../components/navbar/desktop/TopBar.tsx
 import Card from "./Card";
 import DetailedView from "./DetailedView";
 import Search from './Search.tsx';
-import './Courses.css';
+import './styles/Courses.css';
 import Filters from "./Filters.tsx";
 import { BASE_API_URL } from "../constants.ts";
 import {Loading} from "../components/loading/Loading.tsx";

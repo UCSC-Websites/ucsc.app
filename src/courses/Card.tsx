@@ -1,5 +1,5 @@
 import React from "react"
-import './Card.css'
+import './styles/Card.css'
 import SinglePersonIconLightMode from '/icons/single-person-light-mode.svg';
 import SinglePersonIconDarkMode from '/icons/single-person-dark-mode.svg';
 

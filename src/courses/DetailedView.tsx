@@ -1,5 +1,5 @@
 import React from "react"
-import './DetailedView.css';
+import './styles/DetailedView.css';
 import {statusEmoji} from "./StatusEmoji";
 import ExternalLinkIcon from '/icons/external-link.svg';
 import BackIcon from '/icons/back-arrow.svg';
@@ -74,7 +74,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({ details, modality, link, is
                     <div className="classDetailsGrid" style={classDetailsGridStyle}>
                         {classDetailsGridEntry("Status", detailsObj.primary_section.enrl_status)}
                         {classDetailsGridEntry("Enrolled", detailsObj.primary_section.enrl_total + ' / ' + detailsObj.primary_section.capacity)}
-                        {classDetailsGridEntry("Waitlist", detailsObj.primary_section.waitlist_capacity + ' / ' + detailsObj.primary_section.waitlist_total)}
+                        {classDetailsGridEntry("Waitlist", detailsObj.primary_section.waitlist_total + ' / ' + detailsObj.primary_section.waitlist_capacity)}
                         {classDetailsGridEntry("Credits", detailsObj.primary_section.credits)}
                         {classDetailsGridEntry("GenEd", detailsObj.primary_section.gened || "None")}
                         {classDetailsGridEntry("Modality", modality)}
