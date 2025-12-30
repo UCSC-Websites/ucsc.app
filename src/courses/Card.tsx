@@ -18,6 +18,8 @@ import SunIconDarkMode from '/icons/sun-dark-mode.svg';
 
 import { Icon } from "../components/Icon";
 import { statusEmoji } from "./StatusEmoji";
+import { useContext } from "react";
+import { Context } from "../Context";
 
 interface CardProps {
     classStatus: string,
@@ -35,7 +37,9 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ classStatus, className, instructor, location, time, enrollment, summerSession, term, classID, onCardClick }) => {
-    return (
+    const ctx = useContext(Context);
+	
+	return (
         <div className="cardParent" onClick={() => { onCardClick(term, classID) }}>
             <div className="card">
                 <div className="classInfo">
@@ -44,7 +48,7 @@ const Card: React.FC<CardProps> = ({ classStatus, className, instructor, locatio
                             <span style={{ fontWeight: '600' }}>{statusEmoji(classStatus)} {className}</span>
                         </p>
                     </div>
-                    {document.documentElement.getAttribute('data-theme') === 'dark' ? (
+                    {ctx!.theme === 'dark' ? (
                         <>
                             <Icon svg={SinglePersonIconDarkMode} data={instructor} />
                             <Icon svg={MapIconDarkMode} data={location} />
