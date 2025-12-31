@@ -11,13 +11,15 @@ export function TopBar() {
 	const ctx = useContext(Context);
     
     return (
-        <header className={`app-bar ${isInsights ? 'glass-topbar' : ''}`}>
-            <nav className="nav-bar__nav">
-                <NavBarButtons onClick={() => ctx?.setDrawerOpen(false)} />
-            </nav>
-            <div className="nav-bar__theme-toggle">
-                <ThemeToggle />
-            </div>
-        </header>
+        <>
+            <header className={`app-bar ${isInsights ? 'glass-topbar' : ''}`}>
+                <nav className="nav-bar__nav">
+                    <NavBarButtons onClick={() => ctx?.setDrawerOpen(false)} />
+                </nav>
+                <div className="nav-bar__theme-toggle">
+                    <ThemeToggle />
+                </div>
+            </header>
+        </>
     );
 }

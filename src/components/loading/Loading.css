@@ -17,6 +17,13 @@
     animation: spin 2s ease infinite;
 }
 
+.big {
+    border: 32px solid #f3f3f3;
+    border-top: 32px solid var(--gold);
+    width: 200px;
+    height: 200px;
+}
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);

@@ -16,25 +16,30 @@
 } */
 
 .foodBlock {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    &:hover {
-        transition: 0.2s ease-in-out;
-        background-color: var(--bg-color);
-    }
+	background-color: var(--card-bg);
+	color: var(--text-color);
+
+	&:hover {
+		transition: 0.2s ease-in-out;
+		background-color: var(--bg-color);
+	}
 }
 
 .dateHeader {
 	background-color: var(--bg-color);
 }
 
+.filler {
+	visibility: hidden
+}
+
 .mealName {
-    color: var(--text-color);
+	color: var(--text-color);
 }
 
 .groupName {
-    /* background-color: var(--bg-color); */
-    color: var(--link-hover);
+	/* background-color: var(--bg-color); */
+	color: var(--link-hover);
 }
 
 .menuPanel {
@@ -42,9 +47,9 @@
 	padding: 1.25rem 1.5rem;
 	border-radius: 12px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-	transition: box-shadow 0.3s ease, transform 0.3s ease, border 0.3s ease;
+	transition: box-shadow 0.3s ease, transform 0.3s ease-in-out, border 0.3s ease;
 	opacity: 0;
-	transform: translateY(0) scale(1);
+	/* transform: translateY(0) scale(1); */
 	border: 1px solid transparent;
 	will-change: transform, box-shadow, border;
 	animation: fadeInUp 1s ease forwards;
@@ -52,7 +57,7 @@
 }
 
 .menuPanel:hover {
-    transform: translateY(4px) scale(1.02);
+	transform: translateY(4px) scale(1.02);
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 	border: 1px solid var(--link-hover);
 }

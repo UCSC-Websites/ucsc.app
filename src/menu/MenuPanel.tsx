@@ -15,9 +15,9 @@ export function MenuPanel(props: MenuPanelProps) {
       );
     return (
         <>
-        <div className="menuPanel" style={{width: props.width ?? '100%', marginLeft: 0,
-            padding: 0, borderRadius: 10, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-            display: 'flex', flexDirection: 'column', overflowY: 'scroll', marginBottom: 30,
+        <div className="menuPanel" style={{ width: props.width ?? '100%', marginLeft: 0,
+            padding: 0, paddingBottom: 10, marginTop: 10, borderRadius: 10, boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+            display: 'flex', flexDirection: 'column', marginBottom: 30,
             minWidth: '300px'}}>
             <div style={{fontSize: 28, fontWeight: 'bold', margin: 0, padding: 20}}>{props.name}</div>
             {locationMenus.map(([mealName, meal]) =>

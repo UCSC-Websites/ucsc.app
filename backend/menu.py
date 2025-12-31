@@ -12,7 +12,7 @@ MEAL_URL = '&mealName='
 LONGMENU_URL = 'longmenu.aspx?naFlag=1&locationNum=' 
 SHORTMENU_URL = 'shortmenu.aspx?naFlag=1&locationNum='
 
-EMOJIS = { 'veggie': '🥦', 'vegan': '🌱', 'halal': '🍖', 'eggs': '🥚', 'beef': '🐮', 'milk': '🥛', 'fish': '🐟', 'alcohol': '🍷', 'gluten': '🍞', 'soy': '🫘', 'treenut': '🥥', 'sesame': '𓇢', 'pork': '🐷', 'shellfish': '🦐', 'nuts': '🥜' }
+EMOJIS = { 'veggie': '🥦', 'vegan': '🌱', 'halal': '🍖', 'eggs': '🥚', 'beef': '🐮', 'milk': '🥛', 'fish': '🐟', 'alcohol': '🍷', 'gluten': '🍞', 'soy': '🫘', 'treenut': '🥥', 'sesame': '𓇢', 'pork': '🐷', 'shellfish': '🦐', 'nuts': '🥜', 'wheat': '🌾'}
 
 class Location(Enum):
     CowellStevenson = '05'
@@ -143,6 +143,7 @@ def get_short_menu(locationNum: str, day_offset: int = 0) -> str:
             for restriction in food.select('img'):
                 restriction_name = restriction['src'].split('/')[-1].split('.')[0]
                 restrictions.append(EMOJIS[restriction_name] if restriction_name in EMOJIS else restriction_name)
+                print(restriction_name)
 
             food_items[current_group][food_name] = {
                 'name': food_name,
