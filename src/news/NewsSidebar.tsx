@@ -26,17 +26,20 @@ export default function NewsSidebar({ FEEDS, setSelectedFeeds, selectedFeeds, to
 				))}
 			</div>
 
-			
-			<button onClick={() => {
-				if (selectedFeeds.length < FEEDS.length) { // some are unselected
-					setSelectedFeeds(FEEDS);
-					localStorage.setItem("selectedFeeds", JSON.stringify(FEEDS));
-				}
-				else {
-					setSelectedFeeds([]);
-					localStorage.setItem("selectedFeeds", JSON.stringify([]));
-				}
-			}} className="filterButton" style={{marginBottom: '10px', width: '100%'}}>
+
+			<button
+				onClick={() => {
+					if (selectedFeeds.length < FEEDS.length) { // some are unselected
+						setSelectedFeeds(FEEDS);
+						localStorage.setItem("selectedFeeds", JSON.stringify(FEEDS));
+					}
+					else {
+						setSelectedFeeds([]);
+						localStorage.setItem("selectedFeeds", JSON.stringify([]));
+					}
+				}}
+				className="filterButton"
+				style={{ marginBottom: '10px', width: '100%' }}>
 				{selectedFeeds.length === FEEDS.length ? "Deselect All" : "Select All"}
 			</button>
 		</div>

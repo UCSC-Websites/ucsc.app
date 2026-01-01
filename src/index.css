@@ -1,8 +1,3 @@
-/* body, html, root {
-  color: var(--text-color);
-  background-color: var(--bg-color);
-} */
-
 html, body {
   font-family: 'Dongle', sans-serif;
   margin-top: 0;
@@ -14,60 +9,6 @@ html, body {
   --safe-area-max-inset-bottom: env(safe-area-max-inset-bottom, 36px);
   --bottom-bar-height: 0px;
 }
-
-/* body {
-  margin: 0;
-  padding-top: 50px;
-  min-height: 100vh;
-  box-sizing: border-box;
-  border: 5px solid yellow;
-
-  display: flex;
-  flex-direction: column;
-}
-
-:root {
-  --font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-
-  border: 5px solid red;
-
-  --text-color: #ffffff;
-  --bg-color: #242424;
-
-  --primary-color: #646cff;
-  --primary-hover: #535bf2;
-
-  --button-bg: #1a1a1a;
-  --card-bg: #264775;
-  --link-color: #4dd0e1;
-  --link-hover: #80deea;
-
-  font-family: var(--font-family);
-  color: var(--text-color);
-  background-color: var(--bg-color);
-  transition: background-color 0.3s, color 0.3s;
-
-  /* margin: 0; */
-  /* min-width: 100vw; */
-  /* min-height: 100vh; */ /*
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-[data-theme="light"] {
-  --text-color: #213547;
-  --bg-color: #ffffff;
-
-  --primary-color: #646cff;
-  --primary-hover: #747bff;
-
-  --button-bg: #f9f9f9;
-  --card-bg: #f1f1f1;
-  --link-color: #0077cc;
-  --link-hover: #005999;
-} */
-
 
 html, body {
   margin: 0;
@@ -152,9 +93,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  /* background-color: #1a1a1a; */
   background-color: light-dark(#f9f9f9, #1a1a1a);
-  /* background-color: var(--button-bg); */
   cursor: pointer;
   transition: border-color 0.25s;
 }
