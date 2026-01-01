@@ -36,7 +36,7 @@ export default function DateHeader() {
 
     return (
         <>
-        <div className="dateHeader" style={{position: contextValues?.mobile ? 'fixed' : 'unset', width: '100%', zIndex: 1000, fontSize: 36, marginTop: 60, color: 'var(--gold)', fontWeight: 'bold', textAlign: 'center' }}> 
+        <div className="dateHeader" style={{position: contextValues?.mobile ? 'fixed' : 'unset', width: '100%', zIndex: 499, fontSize: 36, marginTop: 60, color: 'var(--gold)', fontWeight: 'bold', textAlign: 'center' }}> 
             {contextValues?.mobile ? mobileTodayDisplay : desktopTodayDisplay}
         </div>
 
