@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 MAX_RESULTS: str = "2000"
 URL:         str = "https://pisa.ucsc.edu/class_search/index.php";
 
-# term                2252 (summer 2025), 2248 (spring 2025), 2246 (winter 2024), etc
+# term                2252 (summer 2025), 2248 (spring 2025), 2246 (winter 2024), etc 2048 is oldest
 # reg_status          O (open), all
 # department          ANTH, AM, CSE, etc.
 # catalogOp           = contains >= <=
