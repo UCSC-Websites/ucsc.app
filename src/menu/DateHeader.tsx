@@ -30,20 +30,23 @@ const weekdays = [
 export default function DateHeader() {
     const contextValues = useContext(Context);
 
+    return (
+        <>
+        {contextValues?.mobile ? <DateHeaderBase fixed={true} /> : null}
+        <DateHeaderBase fixed={false} />
+        </>
+    );
+}
+
+function DateHeaderBase({fixed = false}: {fixed?: boolean}) {
+    const contextValues = useContext(Context);
+
     const today = new Date();
     const mobileTodayDisplay = `Menus for ${weekdays[today.getDay()]}`;
     const desktopTodayDisplay = `Menus for ${weekdays[today.getDay()]}, ${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
-
     return (
-        <>
-        <div className="dateHeader" style={{position: contextValues?.mobile ? 'fixed' : 'unset', width: '100%', zIndex: 499, fontSize: 36, marginTop: 60, color: 'var(--gold)', fontWeight: 'bold', textAlign: 'center' }}> 
+        <div className={`dateHeader`} style={{position: contextValues?.mobile && !fixed ? 'fixed' : 'unset', visibility: fixed ? 'hidden' : 'visible', width: '100%', marginTop: contextValues?.mobile ? 0 : 60, padding: 10, zIndex: 499, fontSize: contextValues?.mobile ? 32 : 32, color: 'var(--gold)', fontWeight: 'bold', textAlign: 'center' }}> 
             {contextValues?.mobile ? mobileTodayDisplay : desktopTodayDisplay}
         </div>
-
-        {contextValues?.mobile ? <div className="dateHeader filler" style={{width: '100%', zIndex: 1000, fontSize: 36, marginTop: 60, color: 'var(--gold)', fontWeight: 'bold', textAlign: 'center' }}> 
-            {contextValues?.mobile ? mobileTodayDisplay : desktopTodayDisplay}
-        </div>
-        : null}
-        </>
-    );
+    )
 }

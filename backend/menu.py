@@ -12,7 +12,7 @@ MEAL_URL = '&mealName='
 LONGMENU_URL = 'longmenu.aspx?naFlag=1&locationNum=' 
 SHORTMENU_URL = 'shortmenu.aspx?naFlag=1&locationNum='
 
-EMOJIS = { 'veggie': '🥦', 'vegan': '🌱', 'halal': '🍖', 'eggs': '🥚', 'beef': '🐮', 'milk': '🥛', 'fish': '🐟', 'alcohol': '🍷', 'gluten': '🍞', 'soy': '🫘', 'treenut': '🥥', 'sesame': '𓇢', 'pork': '🐷', 'shellfish': '🦐', 'nuts': '🥜', 'wheat': '🌾'}
+EMOJIS = { 'veggie': '🥦', 'vegan': '🌱', 'halal': '🍖', 'eggs': '🥚', 'beef': '🐮', 'milk': '🥛', 'fish': '🐟', 'alcohol': '🍷', 'gluten': '🍞', 'soy': '🫘', 'treenut': '🥥', 'sesame': '𓇢', 'pork': '🐷', 'shellfish': '🦐', 'nuts': '🥜', 'wheat': '🌾  '}
 
 class Location(Enum):
     CowellStevenson = '05'

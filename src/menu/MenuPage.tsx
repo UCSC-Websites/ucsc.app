@@ -32,11 +32,12 @@ export default function MenuPage() {
         })()
     }, []);
         return (
-        <div style={{overflow: 'scroll', height: '100vh', width: '100vw'}}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw'}}>
             {contextValues?.mobile ? (<MobileTopBar />) : (<DesktopTopBar />)}
-            <DateHeader/>
+            {/* <DateHeader/> */}
             
-            <div style={{width: '100%', overflowX: 'scroll', overflowY: 'hidden'}}>
+            
+            <div style={{width: '100%', overflowX: 'scroll', flex: 1}}>
             {loading ? <Loading/> : error ? <Error>Error Loading Menus</Error> : (
                 <div className="MenuPanelDelay" style={{ "--delay": `${1 * 115}ms` } as React.CSSProperties}>
                     {contextValues?.mobile ? (<MobileMenu>{menuData}</MobileMenu>) : (<DesktopMenu>{menuData}</DesktopMenu>)}
