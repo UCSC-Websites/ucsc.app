@@ -1,4 +1,4 @@
-import requests, bs4, json, sqlite3
+import requests, bs4, re, sqlite3
 from tqdm import tqdm
 
 URL: str = "https://pisa.ucsc.edu/class_search/index.php"
@@ -32,6 +32,32 @@ body: dict[str, str] = {
 	'rec_start': '0', 
 	'rec_dur': '10000'
 }
+dayToID: dict[str, int] = {
+	'M': 0,
+	'Tu': 1,
+	'W': 2,
+	'Th': 3,
+	'F': 4,
+	'Sa': 5,
+	'Su': 6
+}
+
+"""Convert time from '02:40PM' format to '14:40:00' format"""
+def convertTo24hr(timeStr: str) -> str:
+    timePart: str = timeStr[:-2]
+    period: str = timeStr[-2:]
+    
+    hour, minute = timePart.split(':')
+    hour = int(hour)
+    
+    if period == 'PM' and hour != 12:
+        hour += 12
+    elif period == 'AM' and hour == 12:
+        hour = 0
+    
+    return f"{hour:02d}:{minute}:00"
+
+
 
 def getClassLocationsForTerm(term: int) -> None:
 	body["binds[:term]"] = str(term)
@@ -39,22 +65,22 @@ def getClassLocationsForTerm(term: int) -> None:
 	response: requests.Response = requests.post(URL, headers=HEADERS, data=body)
 	soup = bs4.BeautifulSoup(response.text, 'lxml')
 	panels = soup.find_all(class_="panel panel-default row")
+
+	roomPattern: re.Pattern = re.compile(r' ([A-Z]?[0-9]+[A-Z]?)$')
+	timePattern: re.Pattern = re.compile(r'((?:[A-Z][a-z]?)+) (\d\d:\d\d[A-Z][A-Z]-\d\d:\d\d[A-Z][A-Z])') #group1 is days, group2 is time
+	
+	# capital letter followed by optional lowercase letter, repeated 7 times, to capture each individual day
+	# repeating captures (+) only store the last match, not all of them, so i need to do this bullshit
+	dayPattern: re.Pattern = re.compile(r'^([A-Z][a-z]?)([A-Z][a-z]?)?([A-Z][a-z]?)?([A-Z][a-z]?)?([A-Z][a-z]?)?([A-Z][a-z]?)?([A-Z][a-z]?)?') 
+
+	conn: sqlite3.Connection = sqlite3.connect('locations/locations.db')
+	cursor: sqlite3.Cursor = conn.cursor()
+
 	data: list[dict] = []
 	for panel in panels:
 		classData: dict = {}
 
-		# scrape body 
 		p = panel.find(class_="panel-body").find(class_="row").find_all("div")
-		# 0: class number
-		# 1: instructor
-		# 2: parent div of location and time
-		# 3: location
-		# 4: time
-		# 5: summer session
-		# 6: enrolled
-		# 7: textbooks
-		# 8: course readers
-		# 9: modality
 		classData["location"] = p[3].text.replace("Location: ", "").strip()[5:]
 		classData["time"] = p[4].text.replace("Day and Time: ", "").strip()
 
@@ -82,6 +108,50 @@ def getClassLocationsForTerm(term: int) -> None:
 			classData["location"].startswith("WestResearchPark") or
 			classData["location"].startswith("Lg Discovery")
 		): continue	
+
+
+		# get location
+		roomMatches: re.Match | None = roomPattern.search(classData["location"])
+		classData["room"] = roomMatches[0].strip() if roomMatches else ""
+		classData["building"] = classData["location"].replace(classData["room"], "").strip()
+		
+		# remove random space in some listings
+		if classData["building"] == "R Carson  Acad":
+			classData["building"] = "R Carson Acad"
+
+		# "The DO UPDATE SET locationString = locationString is a no-op that triggers the RETURNING clause even when there's a conflict."
+		cursor.execute('''
+			INSERT INTO location(locationString, building, room) VALUES (?, ?, ?)
+			ON CONFLICT(building, room) DO UPDATE SET locationString = locationString
+			RETURNING locationID
+		''', (
+			classData["location"],
+			classData["building"],
+			classData["room"],
+		))
+		classData["locationID"] = cursor.fetchone()[0]
+
+
+		matches: list[str] = timePattern.findall(classData["time"])
+		# some classes can have different meeting times on different days. 
+		# eg "MTuWTh 06:00PM-10:00PM    F 04:00PM-07:00PM"
+		for time in matches:
+			meetingDays: str = time[0]
+			startTime: str = time[1].split('-')[0]
+			endTime: str = time[1].split('-')[1]
+
+			for day in ["M", "Tu", "W", "Th", "F", "Sa", "Su"]:
+				if day not in meetingDays: 
+					classData[day] = None
+					continue
+
+				cursor.execute('''
+					INSERT INTO timeBlock(day, startTime, endTime) VALUES (?, ?, ?)
+					ON CONFLICT(day, startTime, endTime) DO UPDATE SET day = day
+					RETURNING blockID
+				''', (dayToID[day], convertTo24hr(startTime), convertTo24hr(endTime)))
+				classData[day] = cursor.fetchone()[0]
+		
 		
 		classData["class_number"] = p[0].find('a').text.strip()
 		classData["instructor"] = p[1].text.replace("Instructor: ", "").strip()
@@ -97,29 +167,68 @@ def getClassLocationsForTerm(term: int) -> None:
 	# with open('locations/test.json', 'w') as file:
 	# 	json.dump(data, file, indent=4)
 
-	conn: sqlite3.Connection = sqlite3.connect('locations/locations.db')
-	cursor: sqlite3.Cursor = conn.cursor()
-	query: str = "INSERT INTO class(id, link, name, instructor, location, time, term) VALUES(?, ?, ?, ?, ?, ?, ?)"
+
+	query: str = '''
+		INSERT INTO class(
+			term, id, pisaLink, name, instructor, time,
+			monday, tuesday, wednesday, thursday, friday, saturday, sunday,
+			locationID
+		) 
+		VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	'''
 	for d in data:
-		cursor.execute(query, (d["class_number"], d["link"], d["name"], d["instructor"], d["location"], d["time"], term))
+		cursor.execute(query, (
+			term,
+			d["class_number"], 
+			d["link"],
+			d["name"],
+			d["instructor"], 
+			d["time"], 
+			d["M"], d["Tu"], d["W"], d["Th"], d["F"], d["Sa"], d["Su"],
+			d["locationID"], 
+		))
 	conn.commit()
 	conn.close()
 
 
 if __name__ == "__main__":
-	CURRENT_TERM: int = 2260
-	for term in tqdm(range(2048, CURRENT_TERM + 2, 2)):
-		getClassLocationsForTerm(term)
+	# CURRENT_TERM: int = 2260
+	# for term in tqdm(range(2048, CURRENT_TERM + 2, 2)):
+	# 	getClassLocationsForTerm(term)
+	
+	getClassLocationsForTerm(2260)
 
 
 '''
 CREATE TABLE class (
+	term INTEGER,
 	id INTEGER,
-	link VARCHAR(300),
+
+	pisaLink VARCHAR(300),
 	name VARCHAR(200),
 	instructor VARCHAR(100),
-	location VARCHAR(100),
-	time VARCHAR(100),
-	term INTEGER
+	time VARCHAR(30),                  -- the original time string, remove later
+	locationID INTEGER NOT NULL,
+
+	PRIMARY KEY (term, id),
+	FOREIGN KEY (locationID) REFERENCES location(locationID)
+);
+
+CREATE TABLE location (
+	locationID INTEGER PRIMARY KEY,
+	locationString VARCHAR(30),        -- the original location string, remove later
+	building VARCHAR(30),
+	room VARCHAR(10),
+
+	UNIQUE (building, room)
+);
+
+CREATE TABLE timeBlock (
+	blockID   INTEGER PRIMARY KEY,
+	day       TINYINT NOT NULL,      -- 0 mon, 1 tues, etc
+	startTime TIME NOT NULL,
+	endTime   TIME NOT NULL,
+
+	UNIQUE (day, startTime, endTime)
 );
 '''
