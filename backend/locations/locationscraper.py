@@ -57,6 +57,21 @@ def convertTo24hr(timeStr: str) -> str:
     
     return f"{hour:02d}:{minute}:00"
 
+def scrapePanel(panel) -> dict[str, str]:
+	classData: dict[str, str] = {}
+	p = panel.find(class_="panel-body").find(class_="row").find_all("div")
+	header = panel.find(class_="panel-heading panel-heading-custom").find("h2")
+	aTag = header.find("a")
+
+	classData["class_number"] = p[0].find('a').text.strip()
+	classData["name"] = aTag.text.replace('\xa0\xa0\xa0', ' ').strip()
+	classData["link"] = aTag.get("href")
+	classData["instructor"] = p[1].text.replace("Instructor: ", "").strip()
+	classData["location"] = p[3].text.replace("Location: ", "").strip()[5:]
+	classData["time"] = p[4].text.replace("Day and Time: ", "").strip()
+
+	return classData
+
 
 
 def getClassLocationsForTerm(term: int) -> None:
@@ -78,11 +93,7 @@ def getClassLocationsForTerm(term: int) -> None:
 
 	data: list[dict] = []
 	for panel in panels:
-		classData: dict = {}
-
-		p = panel.find(class_="panel-body").find(class_="row").find_all("div")
-		classData["location"] = p[3].text.replace("Location: ", "").strip()[5:]
-		classData["time"] = p[4].text.replace("Day and Time: ", "").strip()
+		classData: dict = scrapePanel(panel)
 
 		if (
 			# Fall 2004: some classes dont have a time, some locations might just be "STU"/"FLD"/etc, and some locations might be empty
@@ -132,7 +143,25 @@ def getClassLocationsForTerm(term: int) -> None:
 		classData["locationID"] = cursor.fetchone()[0]
 
 
+		# insert class
+		query: str = '''
+			INSERT INTO class(term, id, pisaLink, name, instructor, time, locationID) 
+			VALUES(?, ?, ?, ?, ?, ?, ?)
+		'''
+		cursor.execute(query, (
+			term,
+			classData["class_number"], 
+			classData["link"],
+			classData["name"],
+			classData["instructor"], 
+			classData["time"],
+			classData["locationID"], 
+		))
+	
+
+
 		matches: list[str] = timePattern.findall(classData["time"])
+		blockIDs: list = []
 		# some classes can have different meeting times on different days. 
 		# eg "MTuWTh 06:00PM-10:00PM    F 04:00PM-07:00PM"
 		for time in matches:
@@ -150,43 +179,17 @@ def getClassLocationsForTerm(term: int) -> None:
 					ON CONFLICT(day, startTime, endTime) DO UPDATE SET day = day
 					RETURNING blockID
 				''', (dayToID[day], convertTo24hr(startTime), convertTo24hr(endTime)))
-				classData[day] = cursor.fetchone()[0]
+				blockIDs.append(cursor.fetchone()[0])
 		
+
+		# insert into junction table
+		for blockID in blockIDs:
+			cursor.execute('INSERT INTO classTimeBlock(term, classID, blockID) VALUES(?, ?, ?)', (
+				term, classData["class_number"], blockID
+			))	
+
+
 		
-		classData["class_number"] = p[0].find('a').text.strip()
-		classData["instructor"] = p[1].text.replace("Instructor: ", "").strip()
-
-		# scrape header (open/closed/waitlisted, class name, link)
-		header = panel.find(class_="panel-heading panel-heading-custom").find("h2")
-		aTag = header.find("a")
-		classData["link"] = aTag.get("href")
-		classData["name"] = aTag.text.replace('\xa0\xa0\xa0', ' ').strip()
-
-		data.append(classData)
-	
-	# with open('locations/test.json', 'w') as file:
-	# 	json.dump(data, file, indent=4)
-
-
-	query: str = '''
-		INSERT INTO class(
-			term, id, pisaLink, name, instructor, time,
-			monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-			locationID
-		) 
-		VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-	'''
-	for d in data:
-		cursor.execute(query, (
-			term,
-			d["class_number"], 
-			d["link"],
-			d["name"],
-			d["instructor"], 
-			d["time"], 
-			d["M"], d["Tu"], d["W"], d["Th"], d["F"], d["Sa"], d["Su"],
-			d["locationID"], 
-		))
 	conn.commit()
 	conn.close()
 
@@ -212,6 +215,15 @@ CREATE TABLE class (
 
 	PRIMARY KEY (term, id),
 	FOREIGN KEY (locationID) REFERENCES location(locationID)
+);
+
+CREATE TABLE classTimeBlock (
+	term INTEGER,
+	classID INTEGER,
+	blockID INTEGER,
+
+	FOREIGN KEY (term, classID) REFERENCES class(term, id),
+	FOREIGN KEY (blockID) REFERENCES timeBlock(blockID)
 );
 
 CREATE TABLE location (
