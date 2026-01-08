@@ -17,7 +17,7 @@ def startup():
 
 	print(f'{len(knownBuildings)} buildings were found in the database.')
 
-@router.get('/schedule/')
+@router.get('/schedule')
 async def getBuildings():
 	return list(knownBuildings)
 
