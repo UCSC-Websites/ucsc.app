@@ -113,7 +113,7 @@ c: list[str] = [
 
 @router.get("/rss")
 async def getAll(bgTasks: BackgroundTasks, categories: int|None = None):
-    if (datetime.now() - cacheControl).seconds > 86400: 
+    if (datetime.now() - cacheControl).total_seconds() > 86400: 
         bgTasks.add_task(UpdateFeed)
 
     global feed
@@ -128,83 +128,3 @@ async def getAll(bgTasks: BackgroundTasks, categories: int|None = None):
 
 
     return feed
-
-
-# @router.get("/rss/arts-culture")
-# async def getRSSArtsCulture(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400: 
-#         bgTasks.add_task(UpdateFeed)
-
-#     return FilterArticles("Arts & Culture")
-
-
-# @router.get("/rss/climate-sustainability")
-# async def getRSSClimateSustainability(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400: 
-#         bgTasks.add_task(UpdateFeed)
-
-#     return FilterArticles("Climate & Sustainability")
-
-
-# @router.get("/rss/earth-space")
-# async def getRSSEarthSpace(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400:
-#         bgTasks.add_task(UpdateFeed)
-
-#     return FilterArticles("Earth & Space")
-
-
-# @router.get("/rss/health")
-# async def getRSSHealth(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400:
-#         bgTasks.add_task(UpdateFeed)
-
-#     return FilterArticles("Health")
-
-
-# @router.get("/rss/social-justice-community")
-# async def getRSSSocialJusticeCommunity(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400:
-#         bgTasks.add_task(UpdateFeed)
-
-#     return FilterArticles("Social Justice & Community")
-
-
-# @router.get("/rss/student-experience")
-# async def getRSSStudentExperience(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400:
-#         bgTasks.add_task(UpdateFeed)
-
-#     return FilterArticles("Student Experience")
-
-
-# @router.get("/rss/technology")
-# async def getRSSTechnology(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400:
-#         bgTasks.add_task(UpdateFeed)
-
-#     return FilterArticles("Technology")
-
-
-# @router.get("/rss/newsletter")
-# async def getNewsLetter(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400:
-#         bgTasks.add_task(UpdateFeed)
-
-#     return FilterArticles("Social Justice & Community")
-
-
-# @router.get("/rss/be-news")
-# async def getBENews(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400:
-#         bgTasks.add_task(UpdateFeed)
-
-#     return feed['be-news']
-
-
-# @router.get("/rss/campus-news")
-# async def getCampusNews(bgTasks: BackgroundTasks):
-#     if (datetime.now() - cacheControl).seconds > 86400:
-#         bgTasks.add_task(UpdateFeed)
-
-#     return feed['campus-news']
