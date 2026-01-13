@@ -1,6 +1,5 @@
 import {useState} from 'react';
 import './DateSelector.css';
-import { Link } from 'react-router';
 
 const dayOffsets = [0, 1, 2, 3, 4, 5, 6];
 
