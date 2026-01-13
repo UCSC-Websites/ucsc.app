@@ -17,6 +17,7 @@ function App() {
 	const [mobile, setMobile] = useState(false);
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [desktopMenuHeight, setDesktopMenuHeight] = useState(0);
+	const [selectedDateOffset, setSelectedDateOffset] = useState(0);
 	const [theme, setTheme] = useState(() =>
 		localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
 	);
@@ -41,7 +42,10 @@ function App() {
 		setDesktopMenuHeight: setDesktopMenuHeight,
 
 		theme: theme,
-		setTheme: setTheme
+		setTheme: setTheme,
+
+		selectedDateOffset: selectedDateOffset,
+		setSelectedDateOffset: setSelectedDateOffset,
 	}
 
 	return (

@@ -8,6 +8,8 @@ export interface ContextType {
     setDesktopMenuHeight: (value: number) => void;
 	theme: string;
 	setTheme: (value: string | ((prev: string) => string)) => void;
+    selectedDateOffset: number;
+    setSelectedDateOffset: (offset: number) => void;
 }
 
 export const Context = createContext<ContextType | null>(null);

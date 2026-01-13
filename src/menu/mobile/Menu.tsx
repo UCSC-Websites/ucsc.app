@@ -8,9 +8,9 @@ import {Swiper, SwiperSlide} from "swiper/react";
 import 'swiper/css';
 import DateHeader from "../DateHeader.tsx";
 
-export function Menu({children}: {children: Record<string, Menu>}) {
+export function Menu({children}: {children: Record<number, Record<string, Menu>>}) {
     const contextValues = useContext(Context);
-    const menuArrays = Object.entries(children);
+    const menuArrays = Object.entries(children[0]);
     return (
         <>
             <DateHeader/>

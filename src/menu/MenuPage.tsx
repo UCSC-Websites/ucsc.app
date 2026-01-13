@@ -10,22 +10,30 @@ import '../components/loading/Loading.css';
 import {Error, Loading} from "../components/loading/Loading";
 import {useContext, useEffect, useState} from "react";
 
+const dayOffsetCount = 7; // Number of days to fetch menus for
 
 export default function MenuPage() {
     const contextValues = useContext(Context);
-    const [menuData, setMenuData] = useState<Record<string, Menu>>({});
+    const [menuData, setMenuData] = useState<Record<number, Record<string, Menu>>>({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     useEffect(() => {
         (async () => {
-            const menu = await getAllLocationMenus(0);
+            const menus: Record<number, Record<string, Menu>> = {};
 
-            if (!menu) {
-                setError(true);
-                setLoading(false);
-                return;
+            for (let offset = 0; offset < dayOffsetCount; offset++) {
+                const dayMenu = await getAllLocationMenus(offset);
+                if (dayMenu) {
+                    menus[offset] = dayMenu;
+                }
             }
-            setMenuData(menu);
+
+            // if (!dayMenu) {
+            //     setError(true);
+            //     setLoading(false);
+            //     return;
+            // }
+            setMenuData(menus);
             setLoading(false);
         })()
     }, []);

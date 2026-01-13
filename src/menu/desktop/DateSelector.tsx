@@ -1,5 +1,6 @@
-import {useState} from 'react';
+import {useContext} from 'react';
 import './DateSelector.css';
+import {Context} from '../../Context';
 
 const dayOffsets = [0, 1, 2, 3, 4, 5, 6];
 
@@ -29,23 +30,43 @@ const weekdays = [
 ];
 
 export function DateSelector() {
-    const [selectedOffset, setSelectedOffset] = useState(0)
+    const ctx = useContext(Context);
+    if (!ctx) {
+        return null;
+    }
+    const {selectedDateOffset, setSelectedDateOffset} = ctx;
+    
+
 
     return (
         <>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', borderRadius: 50, backgroundColor: 'var(--card-bg   )', 
-                overflow: 'clip', padding: '2.5px 2.5px', gap: '10px', marginTop: '10px'}}>
+                overflow: 'hidden', padding: '2.5px 2.5px', gap: '10px', marginTop: '10px'}}>
             {dayOffsets.map((offset) => {
                 const date = new Date();
                 date.setDate(date.getDate() + offset);  
-                const display = `${weekdays[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+                const display = offset === 0 ? 'Today' :  offset === 1 ? 'Tomorrow' : `${weekdays[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
                 return (
                     <div className="dateButton"
                         onClick={() => {
-                            setSelectedOffset(offset);
-                            window.scrollTo( { top: 0, behavior: 'smooth' } );
+                            setSelectedDateOffset(offset);
+
+                            const menuElement = document.getElementById('dayOffset' + offset);
+
+                            if (menuElement) {
+                                menuElement.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' } );
+                            }
+                            
+                            // const dateButton = document.getElementsByClassName('dateButton')[offset];
+                            // console.log(dateButton);
+                            // if (dateButton) {
+                            //     dateButton.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' } );
+                            // }
+
+                            window.history.replaceState(null, '', `#dayOffset${offset}`);                            
                         }}
-                        key={offset} style={{margin: '5px', padding: '0px 15px', whiteSpace: 'nowrap', borderRadius: 50, wordBreak: 'keep-all', backgroundColor: selectedOffset === offset ? 'var(--gold)' : 'var(--light-gray)', color: selectedOffset === offset ? 'black' : 'var(--dark-gray)', cursor: 'pointer', userSelect: 'none'}}>
+                        key={offset} style={{margin: '5px', padding: '0px 15px', scrollMargin: '0px 12.5px', whiteSpace: 'nowrap',
+                            borderRadius: 50, wordBreak: 'keep-all', backgroundColor: selectedDateOffset === offset ? 'var(--gold)' : 'var(--light-gray)', color: selectedDateOffset === offset ? 'black' : 'var(--dark-gray)', cursor: 'pointer', userSelect: 'none'}}>
                         <h3>{display}</h3>
                     </div>
                     );
