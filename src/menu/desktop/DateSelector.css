@@ -1,0 +1,15 @@
+.dateButton {
+    transition: transform 0.1s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+
+
+.dateButton:active {
+    transform: translateY(2px);
+}
+
+
+/* .dateButton:hover {
+    background-color: var(--gold);
+    color: black;
+} */

@@ -16,14 +16,16 @@ export function Menu({children}: {children: Record<string, Menu>}) {
     return (
         <>
             <DateHeader/>
-            <div style={{display: 'flex', flexDirection: 'row', overflow: 'scroll', marginTop: 0, padding: '0px 15px'}}>
-                    {Object.entries(children).map(([location, menu]: [string, Menu], i: number) => (
-                        <div key={location} style={{display: 'flex', overflow: 'visible', marginLeft: 10, marginBottom: 0, "--delay": `${i * 150}ms`} as React.CSSProperties}
-                        >
-                            <MenuPanel key={location} name={location} menu={menu} width="100%"></MenuPanel>
-                        </div>
-                    ))}
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+                <div style={{display: 'flex', flexDirection: 'row', overflow: 'scroll', marginTop: 0, padding: '0px 15px'}}>
+                        {Object.entries(children).map(([location, menu]: [string, Menu], i: number) => (
+                            <div key={location} style={{display: 'flex', overflow: 'visible', marginLeft: 10, marginBottom: 0, "--delay": `${i * 150}ms`} as React.CSSProperties}
+                            >
+                                <MenuPanel key={location} name={location} menu={menu} width="100%"></MenuPanel>
+                            </div>
+                        ))}
                 </div>
+            </div>
         </>
     );
 }
