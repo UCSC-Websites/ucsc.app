@@ -75,10 +75,10 @@ def scrapePanel(panel) -> dict[str, str]:
 
 
 def getClassLocationsForTerm(term: int) -> None:
-	body["binds[:term]"] = str(term)
-	
-	response: requests.Response = requests.post(URL, headers=HEADERS, data=body)
-	soup = bs4.BeautifulSoup(response.text, 'lxml')
+	with open(f'locations/html/{term}.html', 'r', encoding='utf-8') as file:
+		responseText: str = ''.join(file.readlines())
+
+	soup = bs4.BeautifulSoup(responseText, 'lxml')
 	panels = soup.find_all(class_="panel panel-default row")
 
 	roomPattern: re.Pattern = re.compile(r' ([A-Z]?[0-9]+[A-Z]?)$')
@@ -109,7 +109,8 @@ def getClassLocationsForTerm(term: int) -> None:
 				"Lockheed",
 				"Remote Meeting",
 				"UCSC Boating Center",
-				"IAS Gallery"
+				"IAS Gallery",
+				"Lower Quarry" # no class has been offered here since winter 2011
 			] or
 			# coastal campus locations
 			classData["location"].startswith("Ocean Health") or
@@ -118,8 +119,10 @@ def getClassLocationsForTerm(term: int) -> None:
 			classData["location"].startswith("Lg Discovery") or
 			# only a handful of classes have been taught at the Arboretum (years ago), and the building doesn't seem to exist anymore
 			classData["location"].startswith("Arboretum") or
-			# this also doesnt seem to exist anymore
+			# these buildings dont exist anymore
 			classData["location"].startswith("Ch Merr Rm") or
+			classData["location"].startswith("Kresge Rec") or
+			classData["location"].startswith("Krsg Town Hall") or
 			# only two classes have ever been offered here (CLNI 70 spring23 and spring24)
 			classData["location"].startswith("Coll9/JRLC Garden")
 		): continue
