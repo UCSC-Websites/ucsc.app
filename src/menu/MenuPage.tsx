@@ -16,7 +16,7 @@ export default function MenuPage() {
     const contextValues = useContext(Context);
     const [menuData, setMenuData] = useState<Record<number, Record<string, Menu>>>({});
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [error] = useState(false);
     useEffect(() => {
         (async () => {
             const menus: Record<number, Record<string, Menu>> = {};
