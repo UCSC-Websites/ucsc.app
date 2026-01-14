@@ -2,8 +2,8 @@
 import DateHeader from "./DateHeader.tsx";
 import {MenuPanel} from "../MenuPanel.tsx";
 import {type Menu} from "../api.ts";
-import {useContext} from "react";
-import {Context} from "../../Context.tsx";
+// import {useContext} from "react";
+// import {Context} from "../../Context.tsx";
 
 export function Menu({children}: {children: Record<number, Record<string, Menu>>}) {
     // const filtered = Object.entries(children)
@@ -17,11 +17,11 @@ export function Menu({children}: {children: Record<number, Record<string, Menu>>
     //   );
 
     // const {selectedDateOffset, setSelectedDateOffset} = useContext(Context);
-    const ctx = useContext(Context);
-    if (!ctx) {
-        return null;
-    }
-    const {selectedDateOffset, setSelectedDateOffset} = ctx;
+    // const ctx = useContext(Context);
+    // if (!ctx) {
+    //     return null;
+    // }
+    // const {selectedDateOffset, setSelectedDateOffset} = ctx;
     
     return (
         <>
