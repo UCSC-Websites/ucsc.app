@@ -34,9 +34,7 @@ export function DateSelector() {
     if (!ctx) {
         return null;
     }
-    const {selectedDateOffset, setSelectedDateOffset} = ctx;
-    
-
+    const {selectedDateOffset} = ctx;
 
     return (
         <>
@@ -49,7 +47,7 @@ export function DateSelector() {
                 return (
                     <div className="dateButton"
                         onClick={() => {
-                            setSelectedDateOffset(offset);
+                            // setSelectedDateOffset(offset);
 
                             const menuElement = document.getElementById('dayOffset' + offset);
 

@@ -2,8 +2,11 @@
 import DateHeader from "./DateHeader.tsx";
 import {MenuPanel} from "../MenuPanel.tsx";
 import {type Menu} from "../api.ts";
+import {useContext, useEffect, useRef} from "react";
+import {Context} from "../../Context.tsx";
 // import {useContext} from "react";
 // import {Context} from "../../Context.tsx";
+
 
 export function Menu({children}: {children: Record<number, Record<string, Menu>>}) {
     // const filtered = Object.entries(children)
@@ -16,20 +19,66 @@ export function Menu({children}: {children: Record<number, Record<string, Menu>>
     //     )
     //   );
 
-    // const {selectedDateOffset, setSelectedDateOffset} = useContext(Context);
-    // const ctx = useContext(Context);
-    // if (!ctx) {
-    //     return null;
-    // }
-    // const {selectedDateOffset, setSelectedDateOffset} = ctx;
+    const ctx = useContext(Context);
     
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        
+        const el = scrollRef.current;
+        if (!el) return;
+        
+        const onScroll = () => {
+            const container = el;
+            const dateMenus = container.querySelectorAll<HTMLElement>('[id^="dayOffset"]');
+
+            const containerTop = container.getBoundingClientRect().top;
+            const triggerY = containerTop + 25; // same number you were using
+
+            for (const menu of dateMenus) {
+                const rect = menu.getBoundingClientRect();
+
+                if (rect.bottom >= triggerY) {
+                    const offset = menu.id.replace('dayOffset', '');
+                    ctx?.setSelectedDateOffset(Number(offset));
+                    const dateButtons = document.getElementsByClassName('dateButton');
+                    const dateButton = dateButtons[Number(offset)];
+
+                    if (dateButton) {
+                        dateButton.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' } );
+                    }
+                    break;
+                }
+            }
+        };
+
+        onScroll(); // Initial check on mount
+
+        el.addEventListener("scroll", onScroll);
+        return () => el.removeEventListener("scroll", onScroll);
+    }, [ctx]);
+    
+    // useEffect(() => {
+    //     const scrollContainer = document.querySelector('body');
+
+    //     if (scrollContainer) {
+    //         scrollContainer.addEventListener('scroll', onScroll, true);
+    //     }
+
+    //     return () => {
+    //         if (scrollContainer) {
+    //             scrollContainer.removeEventListener('scroll', onScroll, true);
+    //         }
+    //     };
+    // }, []);
+
     return (
         <>
             <DateHeader/>
-            <div style={{overflow: 'scroll', marginTop: 150}}>
+            <div ref={scrollRef} style={{overflow: 'scroll', marginTop: 150, height: 'calc(100vh - 210px)'}}>
                 {Object.entries(children).map(([offset, dayMenu]) => (
                     <a href={"dayOffset" + offset} id={'dayOffset' + offset}
-                        style={{textDecoration: 'none', color: 'inherit', scrollMarginTop: 210}}
+                        style={{textDecoration: 'none', color: 'inherit', scrollMarginTop: 0}}
                         onClick={(e) => {
                             e.preventDefault();
                         }}>
