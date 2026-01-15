@@ -6,13 +6,19 @@ from locations import locations
 from contextlib import asynccontextmanager
 from datetime import datetime
 import uvicorn
+import httpx
+
+http_client: httpx.AsyncClient
 
 # this function runs on startup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    locations.startup()
+    global http_client
+    http_client = httpx.AsyncClient()
+    # locations.startup()
     await news.UpdateFeed()
     yield
+    await http_client.aclose()
 
 api = FastAPI(lifespan=lifespan)
 api.add_middleware(
@@ -59,7 +65,7 @@ async def getPath():
 @api.get("/menu")
 async def get_menu(location: menu.LocationRequest, day_offset: int = 0):
     start_time = datetime.now()
-    shortmenu = menu.get_short_menu(menu.LOCATION_MAP[location.value].value, day_offset)
+    shortmenu = await menu.get_short_menu(http_client, menu.LOCATION_MAP[location.value].value, day_offset)
     print("Time taken to get short menu:", datetime.now() - start_time)
     return shortmenu
 
@@ -70,7 +76,7 @@ api.include_router(locations.router)
 @api.get('/all_menus')
 async def get_all_menus(day_offset: int = 0):
     start_time = datetime.now()
-    menus = menu.get_all_menus(day_offset)
+    menus = await menu.get_all_menus(http_client, day_offset)
     print("Time taken to get all menus:", datetime.now() - start_time)
     return menus
 

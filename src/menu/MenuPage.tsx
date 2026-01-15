@@ -18,15 +18,16 @@ export default function MenuPage() {
     const [loading, setLoading] = useState(true);
     const [error] = useState(false);
     useEffect(() => {
+        const abortController = new AbortController();
+        
         (async () => {
             const menus: Record<number, Record<string, Menu>> = {};
 
-            for (let offset = 0; offset < dayOffsetCount; offset++) {
-                const dayMenu = await getAllLocationMenus(offset);
-                if (dayMenu) {
-                    menus[offset] = dayMenu;
-                }
-            }
+            await Promise.all(
+                Array.from({ length: dayOffsetCount }, (_, offset) =>
+                    getAllLocationMenus(offset, abortController.signal).then(dayMenu => menus[offset] = dayMenu)
+                )
+            )
 
             // if (!dayMenu) {
             //     setError(true);
@@ -36,6 +37,10 @@ export default function MenuPage() {
             setMenuData(menus);
             setLoading(false);
         })()
+        
+        return () => {
+            abortController.abort();
+        };
     }, []);
         return (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw'}}>

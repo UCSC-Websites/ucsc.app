@@ -2,6 +2,7 @@ uvicorn
 beautifulsoup4
 fastapi[standard]
 requests
+httpx
 feedparser
 google-generativeai
 lxml
