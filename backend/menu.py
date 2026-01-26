@@ -1,8 +1,9 @@
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI
 from enum import Enum
-import requests
+import httpx
 from bs4 import BeautifulSoup, Tag
 from datetime import datetime, timedelta
+import asyncio
 
 api: FastAPI = FastAPI()
 
@@ -70,7 +71,7 @@ class LocationRequest(Enum):
 #     menu_cache[locationNum][date]['timestamp'] = datetime.now()
 
 
-def fetch_website_html(url: str, locationNum: str, meal: str = '', date: str = '') -> str:
+async def fetch_website_html(client: httpx.AsyncClient, url: str, locationNum: str, meal: str = '', date: str = '') -> str:
     full_url = url + locationNum + ((MEAL_URL + meal) if meal != '' else '')
     if date != '':
         date_str = date.replace('/', '%2F')
@@ -84,7 +85,7 @@ def fetch_website_html(url: str, locationNum: str, meal: str = '', date: str = '
         'WebInaCartRecipes': ''
     }
 
-    response = requests.get(full_url, cookies=cookies)
+    response = await client.get(full_url, cookies=cookies)
     return response.text
 
 def calculate_date(day_offset: int) -> str:
@@ -92,15 +93,12 @@ def calculate_date(day_offset: int) -> str:
     date_str = date.strftime('%m/%d/%Y')
     return date_str
 
-def get_all_menus(day_offset: int = 0) -> str:
-    menus = {}
-    for location in LOCATION_MAP:
-        locationNum = LOCATION_MAP[location].value
-        menu = get_short_menu(locationNum, day_offset)
-        menus[location] = menu
-    return menus
+async def get_all_menus(client: httpx.AsyncClient, day_offset: int = 0):
+    tasks = [get_short_menu(client, LOCATION_MAP[location].value, day_offset) for location in LOCATION_MAP.keys()]
+    results = await asyncio.gather(*tasks)
+    return dict(zip(LOCATION_MAP.keys(), results))
 
-def get_short_menu(locationNum: str, day_offset: int = 0) -> str:
+async def get_short_menu(client: httpx.AsyncClient, locationNum: str, day_offset: int = 0) -> str:
     url = BASE_URL + SHORTMENU_URL
 
     date_str = calculate_date(day_offset)
@@ -110,7 +108,7 @@ def get_short_menu(locationNum: str, day_offset: int = 0) -> str:
     # if cached_menu is not None:
         # return cached_menu
 
-    html = fetch_website_html(url, locationNum, '', date_str)
+    html = await fetch_website_html(client, url, locationNum, '', date_str)
     soup = BeautifulSoup(html, 'lxml')
 
     menu = {}
@@ -143,7 +141,7 @@ def get_short_menu(locationNum: str, day_offset: int = 0) -> str:
             for restriction in food.select('img'):
                 restriction_name = restriction['src'].split('/')[-1].split('.')[0]
                 restrictions.append(EMOJIS[restriction_name] if restriction_name in EMOJIS else restriction_name)
-                print(restriction_name)
+                # print(restriction_name)
 
             food_items[current_group][food_name] = {
                 'name': food_name,

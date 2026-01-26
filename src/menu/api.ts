@@ -76,7 +76,7 @@ export async function getMenu(location: string, day_offset: number = 0): Promise
 //     return locationMenus;
 // }
 
-export async function getAllLocationMenus(day_offset: number = 0): Promise<Record<string, Menu>> {
+export async function getAllLocationMenus(day_offset: number = 0, signal?: AbortSignal): Promise<Record<string, Menu>> {
     const startTime = new Date();
     const dateString = new Date(Date.now() + day_offset * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
@@ -87,7 +87,7 @@ export async function getAllLocationMenus(day_offset: number = 0): Promise<Recor
     }
     console.log('Date string:', dateString);
 
-    const locationMenus: Record<string, Menu> = await fetch(BASE_API_URL + '/all_menus?day_offset=' + day_offset).then(async (response) => {
+    const locationMenus: Record<string, Menu> = await fetch(BASE_API_URL + '/all_menus?day_offset=' + day_offset, { signal }).then(async (response) => {
         if (!response.ok) {
             throw new Error('Failed to fetch menu: ' + response.statusText);
         }
