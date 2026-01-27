@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react";
-import GetRooms from "./FetchRooms";
 import { RoomsInBuilding, TimeBlock } from "../types";
-import BuildingRoomList from "./components/BuildingRoomList";
-import { MapContext } from "./MapContext";
-import Schedule from "./Schedule";
-import { Context } from "../Context";
-import './styles/BuildingPopup.css';
 import { BASE_API_URL } from "../constants";
+import { MapContext } from "./MapContext";
+import { Context } from "../Context";
+import GetRooms from "./FetchRooms";
+import BuildingRoomList from "./components/BuildingRoomList";
+import Schedule from "./Schedule";
+import './styles/BuildingPopup.css';
 
 /*
 Each location can have multiple "buildings" in it
@@ -70,7 +70,7 @@ export default function BuildingPopup({ locationName, locationAddress, term }: {
 		setDay
 	};
 
-	const maxHeight = ctx!.mobile ? '200px' : 'calc(50vh - 150px)';
+	const maxHeight = ctx!.mobile ? '200px' : '200px';
 
 	return (
 		<MapContext.Provider value={contextValues}>

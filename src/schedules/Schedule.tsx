@@ -26,7 +26,7 @@ export default function Schedule({ locationName }: { locationName: string }) {
 	const ctx = useContext(MapContext);
 	const globalCtx = useContext(Context);
 
-	const maxHeight = globalCtx!.mobile ? '200px' : '';
+	const maxHeight = globalCtx!.mobile ? '200px' : '400px';
 
 
 	// if the building isnt normal (eg East Field, East Field House, etc), display the selectedBuilding (eg "Martial Arts", "Dance Studio")

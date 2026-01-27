@@ -63,14 +63,14 @@ export default function Map() {
 	const [popupPosition, setPopupPosition] = useState<LatLng | null>(null);
 	const [selectedTerm, setSelectedTerm] = useState<number>(2260);
 
-	const bounds: [[number, number], [number, number]] = [
-		[36.9750, -122.0750],
-		[37.0050, -122.0450]
-	];
+	// const bounds: [[number, number], [number, number]] = [
+	// 	[36.9750, -122.0750],
+	// 	[37.0050, -122.0450]
+	// ];
 
 	const onEachFeature = (feature: Feature<Geometry, BuildingProperties>, layer: Layer) => {
 		layer.on('click', (e) => {
-			console.log([e.latlng.lng, e.latlng.lat]);
+			// console.log([e.latlng.lng, e.latlng.lat]);
 			setSelectedFeature(feature);
 			setPopupPosition(e.latlng);
 		});
@@ -92,7 +92,7 @@ export default function Map() {
 			<MapContainer
 				center={[36.9914, -122.0609]}
 				zoom={15}
-				maxBounds={bounds}
+				// maxBounds={bounds}
 				maxBoundsViscosity={1.0}
 				minZoom={15}
 				maxZoom={30}
@@ -123,10 +123,10 @@ export default function Map() {
 						remove: () => setSelectedFeature(null)
 					}}
 					autoPan={true}
-					autoPanPaddingTopLeft={[20, 100]}
-					autoPanPaddingBottomRight={[20, 20]}
-					keepInView={true}
-					maxHeight={window.innerHeight - 150}
+					// autoPanPaddingTopLeft={[20, 100]}
+					// autoPanPaddingBottomRight={[20, 20]}
+					// keepInView={true}
+					// maxHeight={window.innerHeight - 150}
 				>
 					<BuildingPopup
 						locationName={selectedFeature.properties.BUILDINGNAME}

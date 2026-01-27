@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 
 import AIComponent from './AI/AI.tsx';
 
-import Schedules from './schedules/Schedules.tsx';
+import ScheduleMapPage from './schedules/ScheduleMapPage.tsx';
 
 function App() {
 	const [mobile, setMobile] = useState(false);
@@ -58,7 +58,7 @@ function App() {
 					<Route path='/courses' element={<Courses />} />
 					<Route path='/menu' element={<MenuPage />} />
 					<Route path='/insights' element={<AIComponent />} />
-					<Route path='/schedules' element={<Schedules />} />
+					<Route path='/schedule' element={<ScheduleMapPage />} />
 				</Routes>
 			</BrowserRouter>
 		</Context.Provider>
