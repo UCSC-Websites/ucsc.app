@@ -6,6 +6,7 @@ import { MapContext } from "./MapContext";
 import Schedule from "./Schedule";
 import { Context } from "../Context";
 import './styles/BuildingPopup.css';
+import { BASE_API_URL } from "../constants";
 
 /*
 Each location can have multiple "buildings" in it
@@ -47,7 +48,7 @@ export default function BuildingPopup({ locationName, locationAddress, term }: {
 
 		setWasRoomSelected(true);
 		const uriEncoded = encodeURIComponent(selectedBuilding as string).replace(/%2F/g, '%252F');
-		fetch(`http://localhost:8000/schedule/${term}/${uriEncoded}/${selectedRoom}/${day}`)
+		fetch(`${BASE_API_URL}/schedule/${term}/${uriEncoded}/${selectedRoom}/${day}`)
 			.then(res => res.json())
 			.then(res => {
 				setSelectedSchedule(res);

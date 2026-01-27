@@ -1,5 +1,6 @@
 import requests, bs4, re, sqlite3
 from tqdm import tqdm
+import argparse
 
 URL: str = "https://pisa.ucsc.edu/class_search/index.php"
 HEADERS: dict[str, str] = {
@@ -74,9 +75,14 @@ def scrapePanel(panel) -> dict[str, str]:
 
 
 
-def getClassLocationsForTerm(term: int) -> None:
-	with open(f'locations/html/{term}.html', 'r', encoding='utf-8') as file:
-		responseText: str = ''.join(file.readlines())
+def getClassLocationsForTerm(term: int, useLocal: bool) -> None:
+	if useLocal:
+		with open(f'locations/html/{term}.html', 'r', encoding='utf-8') as file:
+			responseText: str = ''.join(file.readlines())
+	else:
+		body["binds[:term]"] = str(term)
+		response = requests.get(URL, headers=HEADERS, data=body)
+		responseText: str = response.text
 
 	soup = bs4.BeautifulSoup(responseText, 'lxml')
 	panels = soup.find_all(class_="panel panel-default row")
@@ -222,6 +228,10 @@ def getClassLocationsForTerm(term: int) -> None:
 
 
 if __name__ == "__main__":
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-l', '--local', action='store_true', help='Scrape from local HTML files instead of making HTTP requests')
+	args = parser.parse_args()
+
 	CURRENT_TERM: int = 2260
 	for term in tqdm(range(2048, CURRENT_TERM + 2, 2)):
-		getClassLocationsForTerm(term)
+		getClassLocationsForTerm(term, args.local)

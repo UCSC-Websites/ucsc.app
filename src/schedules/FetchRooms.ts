@@ -1,6 +1,7 @@
 import { useState } from "react";
 import buildingLookup from "./data/buildingLookup.json";
 import { RoomsInBuilding } from "../types";
+import { BASE_API_URL } from "../constants";
 
 
 export default function GetRooms() {
@@ -14,7 +15,7 @@ export default function GetRooms() {
 
 		Promise.all(
 			pisaNames.map((n: string) =>
-				fetch(`http://localhost:8000/schedule/${encodeURIComponent(n).replace(/%2F/g, '%252F')}`)
+				fetch(`${BASE_API_URL}/schedule/${encodeURIComponent(n).replace(/%2F/g, '%252F')}`)
 					.then(res => res.json())
 					.then(data => ({ name: n, data }))
 			)

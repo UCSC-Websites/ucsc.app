@@ -16,7 +16,7 @@ async def lifespan(app: FastAPI):
     global http_client
     http_client = httpx.AsyncClient()
     locations.startup()
-    1await news.UpdateFeed()
+    await news.UpdateFeed()
     yield
     await http_client.aclose()
 
