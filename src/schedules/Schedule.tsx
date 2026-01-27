@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { MapContext } from "./MapContext";
 import { TimeBlock } from "../types";
 import ScheduleTimeBlock from "./components/ScheduleTimeBlock";
