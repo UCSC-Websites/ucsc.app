@@ -4,7 +4,6 @@ import { RoomsInBuilding, TimeBlock } from "../types";
 import BuildingRoomList from "./components/BuildingRoomList";
 import { MapContext } from "./MapContext";
 import Schedule from "./Schedule";
-import buildingLookup from "./data/buildingLookup.json";
 
 /*
 Each location can have multiple "buildings" in it
@@ -15,7 +14,7 @@ they're both the same building, hence why selectedBuilding and locationName are 
 // todo Oakes Acad might be null some terms
 // and TA 2nd Stage
 
-export default function BuildingPopup({ locationName, locationAddress }: { locationName: string; locationAddress: string }) {
+export default function BuildingPopup({ locationName, locationAddress, term }: { locationName: string; locationAddress: string, term: number }) {
 	const [fetchRooms, rooms, setRooms] = GetRooms() as [(building: string) => void, Array<RoomsInBuilding>, (a: any) => void];
 
 	const [selectedBuilding, setSelectedBuilding] = useState<string>("");
@@ -44,13 +43,13 @@ export default function BuildingPopup({ locationName, locationAddress }: { locat
 
 		setWasRoomSelected(true);
 		const uriEncoded = encodeURIComponent(selectedBuilding as string).replace(/%2F/g, '%252F');
-		fetch(`http://10.0.0.89:8000/schedule/2260/${uriEncoded}/${selectedRoom}/${day}`)
+		fetch(`http://10.0.0.89:8000/schedule/${term}/${uriEncoded}/${selectedRoom}/${day}`)
 			.then(res => res.json())
 			.then(res => {
 				setSelectedSchedule(res);
 				console.log(selectedSchedule);
 			});
-	}, [selectedRoom, day]);
+	}, [selectedRoom, day, term]);
 
 	const contextValues = {
 		selectedBuilding,
