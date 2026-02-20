@@ -5,6 +5,12 @@ interface ScheduleTimeBlockProps {
 	timeBlock: TimeBlock
 }
 
+const d = new Date();
+function formatTime(time: string) {
+	d.setHours(...(time.split(':') as unknown as [number, number, number]))
+	return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+}
+
 /*
 0: class name
 1: pisa link 
@@ -25,9 +31,9 @@ export default function ScheduleTimeBlock({ timeBlock }: ScheduleTimeBlockProps)
 				{timeBlock[0]}
 			</a>
 			<p className="stb-instructor">
-				{timeBlock[2]}
+				{timeBlock[2].replaceAll(',', ', ')}
 			</p>
-			<p className="stb-time">{timeBlock[3].slice(0, -3)} → {timeBlock[4].slice(0, -3)}</p>
+			<p className="stb-time">{formatTime(timeBlock[3])} → {formatTime(timeBlock[4])}</p>
 		</div>
 	)
 }
