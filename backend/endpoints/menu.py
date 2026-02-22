@@ -1,11 +1,13 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 from enum import Enum
 import httpx
 from bs4 import BeautifulSoup, Tag
 from datetime import datetime, timedelta
 import asyncio
+import httpx
 
-api: FastAPI = FastAPI()
+http_client = httpx.AsyncClient()
+router = APIRouter()
 
 BASE_URL = 'https://nutrition.sa.ucsc.edu/'
 MEAL_URL = '&mealName='
@@ -38,37 +40,19 @@ class LocationRequest(Enum):
     RachelCarsonOakes = 'Carson/Oakes'
 
 
-# Store menu cache in dictionary, with locationNum and date as a key, menu, timestamp as value
+@router.get('/all_menus')
+async def GetAllMenus(day_offset: int = 0):
+    start_time = datetime.now()
+    menus = await get_all_menus(http_client, day_offset)
+    print("Time taken to get all menus:", datetime.now() - start_time)
+    return menus
 
-# CACHE_AGE_SECONDS = 60 * 60 * 24 / 2 # Refresh 2 times a day
-# menu_cache = {}
-
-# def get_menu_cache(locationNum: str, date: str) -> dict:
-#     if locationNum not in menu_cache:
-#         return None
-#     if date not in menu_cache[locationNum]:
-#         return None
-#     if 'timestamp' not in menu_cache[locationNum][date]:
-#         return None
-#     print((datetime.now() - (menu_cache[locationNum][date]['timestamp'])).total_seconds())
-#     if (datetime.now() - menu_cache[locationNum][date]['timestamp']).total_seconds() > CACHE_AGE_SECONDS:
-#         return None
-#     if 'menu' not in menu_cache[locationNum][date]:
-#         return None
-#     if menu_cache[locationNum][date]['menu'] is None:
-#         return None
-#     if menu_cache[locationNum][date]['menu'] == {}:
-#         return None
-#     return menu_cache[locationNum][date]['menu']
-
-# def set_menu_cache(locationNum: str, date: str, menu: dict) -> None:
-#     if locationNum not in menu_cache:
-#         menu_cache[locationNum] = {}
-    
-#     if date not in menu_cache[locationNum]:
-#         menu_cache[locationNum][date] = {}
-#     menu_cache[locationNum][date]['menu'] = menu
-#     menu_cache[locationNum][date]['timestamp'] = datetime.now()
+@router.get("/menu")
+async def get_menu(location: LocationRequest, day_offset: int = 0):
+    start_time = datetime.now()
+    shortmenu = await get_short_menu(http_client, LOCATION_MAP[location.value].value, day_offset)
+    print("Time taken to get short menu:", datetime.now() - start_time)
+    return shortmenu
 
 
 async def fetch_website_html(client: httpx.AsyncClient, url: str, locationNum: str, meal: str = '', date: str = '') -> str:

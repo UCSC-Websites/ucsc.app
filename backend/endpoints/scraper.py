@@ -1,5 +1,8 @@
-import requests, json
+import requests
 from bs4 import BeautifulSoup
+from fastapi import APIRouter
+
+router = APIRouter()
 
 MAX_RESULTS: str = "2000"
 URL:         str = "https://pisa.ucsc.edu/class_search/index.php";
@@ -25,27 +28,28 @@ URL:         str = "https://pisa.ucsc.edu/class_search/index.php";
 # synch               "S" if synchronous, otherwise ""
 # person              "P" if in person, otherwise ""
 
+@router.get("/courses")
 def queryPisa(
-        term: str,
-        regStatus: str,
-        department: str,
-        catalogOp: str,
-        catalogNbr: str,
-        titleKeyword: str,
-        instructorNameOp: str,
-        instructorName: str,
-        ge: str,
-        crseUnitsOp: str,
-        crseUnitsFrom: str,
-        crseUnitsTo: str,
-        crseUnitsExact: str,
-        meetingDays: str,
-        meetingTimes: str,
-        acadCareer: str,
-        asynch: str,
-        hybrid: str,
-        synch: str,
-        person: str
+        term: str, 
+		regStatus: str = "O",
+		department: str = "", 
+		catalogOp: str = "contains", 
+		catalogNum: str = "", 
+		titleKeyword: str = "",
+		instructorNameOp: str = "=",
+		instructorName: str = "",
+		ge: str = "",
+		crseUnitsOp: str = "=",
+		crseUnitsFrom: str = "",
+		crseUnitsTo: str = "",
+		crseUnitsExact: str = "",
+		meetingDays: str = "",
+		meetingTimes: str = "",
+		acadCareer: str = "",
+		asynch: str = "A",
+		hybrid: str = "H",
+		synch: str = "S",
+		person: str = "P"
 ):
     info: dict[str, str] = {
         "action": "results",
@@ -53,7 +57,7 @@ def queryPisa(
         "binds[:reg_status]": regStatus,
         "binds[:subject]": department,
         "binds[:catalog_nbr_op]": catalogOp,
-        "binds[:catalog_nbr]": catalogNbr,
+        "binds[:catalog_nbr]": catalogNum,
         "binds[:title]": titleKeyword,
         "binds[:instr_name_op]": instructorNameOp,
         "binds[:instructor]": instructorName,
@@ -130,29 +134,31 @@ def queryPisa(
     # print(f"Data written to data.json with {len(data)} classes")
     
 
-queryPisa(
-    "2252", 
-    "O",
-    "", 
-    "contains", 
-    "", 
-    "",
-    "=",
-    "",
-    "",
-    "=",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "A",
-    "H",
-    "S",
-    "P"
-)
+# queryPisa(
+#     "2252", 
+#     "O",
+#     "", 
+#     "contains", 
+#     "", 
+#     "",
+#     "=",
+#     "",
+#     "",
+#     "=",
+#     "",
+#     "",
+#     "",
+#     "",
+#     "",
+#     "",
+#     "A",
+#     "H",
+#     "S",
+#     "P"
+# )
 
+
+@router.get("/courses/terms")
 def getTerms():
     response = requests.get("https://pisa.ucsc.edu/class_search/index.php")
     responseData: str = response.text
