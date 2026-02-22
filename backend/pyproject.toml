@@ -1,0 +1,13 @@
+[project]
+name = "backend"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "fastapi[standard]>=0.129.2",
+    "feedparser>=6.0.12",
+    "httpx>=0.28.1",
+    "lxml>=6.0.2",
+    "requests>=2.32.5",
+    "uvicorn>=0.41.0",
+]
