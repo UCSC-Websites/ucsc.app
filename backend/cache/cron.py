@@ -1,3 +1,10 @@
+import sys
+from pathlib import Path
+
+# add the backend directory to Python path
+backendDir: Path = Path(__file__).parent.parent
+sys.path.insert(0, str(backendDir))
+
 import endpoints.menu as menu
 import endpoints.news as news
 from datetime import datetime
