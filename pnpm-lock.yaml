@@ -36,8 +36,8 @@ importers:
         specifier: ^7.5.0
         version: 7.5.0(react-dom@19.0.0-rc.1(react@19.0.0-rc.1))(react@19.0.0-rc.1)
       swiper:
-        specifier: ^11.2.6
-        version: 11.2.6
+        specifier: ^12.1.2
+        version: 12.1.2
     devDependencies:
       '@eslint/js':
         specifier: ^9.21.0
@@ -1127,8 +1127,8 @@ packages:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
 
-  swiper@11.2.6:
-    resolution: {integrity: sha512-8aXpYKtjy3DjcbzZfz+/OX/GhcU5h+looA6PbAzHMZT6ESSycSp9nAjPCenczgJyslV+rUGse64LMGpWE3PX9Q==}
+  swiper@12.1.2:
+    resolution: {integrity: sha512-4gILrI3vXZqoZh71I1PALqukCFgk+gpOwe1tOvz5uE9kHtl2gTDzmYflYCwWvR4LOvCrJi6UEEU+gnuW5BtkgQ==}
     engines: {node: '>= 4.7.0'}
 
   tabbable@6.2.0:
@@ -2212,7 +2212,7 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
 
-  swiper@11.2.6: {}
+  swiper@12.1.2: {}
 
   tabbable@6.2.0: {}
 
