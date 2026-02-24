@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { TopBar as MobileTopBar } from "../components/navbar/mobile/TopBar.tsx";
 import { TopBar as DesktopTopBar } from "../components/navbar/desktop/TopBar.tsx";
 import Card from "./Card";
@@ -58,7 +58,7 @@ export default function Courses() {
 	const [courses, setCourses] = useState<Course[]>([]);
 	const [loading, setLoading] = useState(false);
 	const isMobile = useMediaQuery("(max-width: 768px)");
-	const [detailedData, setDetailedData] = useState<any>(null);
+	const [detailedData, setDetailedData] = useState<string | null>(null);
 	const [selectedClassModality, setSelectedClassModality] = useState<string>("");
 	const [selectedClassLink, setSelectedClassLink] = useState<string>("");
 
@@ -70,15 +70,25 @@ export default function Courses() {
 	const [status, setStatus] = useState<string>("all");
 	const [time, setTimes] = useState<string>("");
 
-	async function fetchCourses(inputData: any) {
+	const abortControllerRef = useRef<AbortController | null>(null);
+
+	async function fetchCourses(inputData: {dept: string, catalogNum: string}) {
 		try {
+			abortControllerRef.current?.abort();
+			abortControllerRef.current = new AbortController();
+
 			setLoading(true);
 
-			const response = await fetch(`${BASE_API_URL}/courses?term=${term}&regStatus=all&department=${inputData.dept}&catalogNum=${inputData.catalogNum}&ge=${ge}&regStatus=${status}&meetingTimes=${time}`);
+			const response = await fetch(
+				`${BASE_API_URL}/courses?term=${term}&regStatus=all&department=${inputData.dept}&catalogNum=${inputData.catalogNum}&ge=${ge}&regStatus=${status}&meetingTimes=${time}`,
+				{ signal: abortControllerRef.current.signal }
+			);
 			const data = await response.json();
 			setCourses(data);
 		} catch (error) {
-			console.error("Failed to fetch courses:", error);
+			if (error instanceof Error && error.name !== 'AbortError') {
+				console.error("Failed to fetch courses:", error);
+			}
 		} finally {
 			setLoading(false);
 		}
