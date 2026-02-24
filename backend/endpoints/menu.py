@@ -97,6 +97,9 @@ async def get_short_menu(client: httpx.AsyncClient, locationNum: str, day_offset
 		'WebInaCartMeals': '',
 		'WebInaCartQtys': '',
 		'WebInaCartRecipes': ''
+	},
+	headers={
+		"Connection": "close"
 	})
 
 	soup: BeautifulSoup = BeautifulSoup(response.text, 'lxml')
