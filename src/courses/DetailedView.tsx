@@ -16,6 +16,24 @@ interface Meeting {
 	instructors: Instructor[];
 }
 
+interface Section {
+	subject: string;
+	catalog_nbr: string;
+	title_long: string;
+	enrl_status: string;
+	enrl_total: number;
+	capacity: number;
+	waitlist_total: number;
+	waitlist_capacity: number;
+	credits: string;
+	gened?: string;
+	class_nbr: string;
+	acad_career: string;
+	description?: string;
+	requirements?: string;
+	meetings?: Meeting[];
+}
+
 interface DetailedViewProps {
     details: string,
     modality: string,
@@ -120,7 +138,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({ details, modality, link, is
                             <div key={index} style={{ marginBottom: '15px' }}>
                                 <p><strong>Day and Times:</strong> {meeting.days} {meeting.start_time}-{meeting.end_time}</p>
                                 <p><strong>Location:</strong> {meeting.location}</p>
-                                <p><strong>Instructor(s):</strong> {meeting.instructors.map((instructor: any, i: number) =>
+                                <p><strong>Instructor(s):</strong> {meeting.instructors.map((instructor: Instructor, i: number) =>
                                     <span key={i}>{instructor.name}{i < meeting.instructors.length - 1 ? ', ' : ''}</span>
                                 )}</p>
                             </div>
@@ -130,7 +148,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({ details, modality, link, is
             {detailsObj.secondary_sections &&
                 <div className="sections classDetails">
                     <h3 className="heading">Sections</h3>
-                    {detailsObj.secondary_sections.map((section: any, index: number) => {
+                    {detailsObj.secondary_sections.map((section: Section, index: number) => {
                         if (!section.meetings) return null;
 
                         return (
@@ -144,7 +162,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({ details, modality, link, is
                                     </p>
                                 </div>
                                 <div>
-                                    {section.meetings.map((meeting: any, i: number) => (
+                                    {section.meetings.map((meeting: Meeting, i: number) => (
                                         <div key={i} style={{ margin: '8px 0' }}>
                                             <p style={{ margin: '2px 0' }}><strong>Day and Times:</strong> {meeting.days} {meeting.start_time}-{meeting.end_time}</p>
                                             <p style={{ margin: '2px 0' }}><strong>Location:</strong> {meeting.location}</p>

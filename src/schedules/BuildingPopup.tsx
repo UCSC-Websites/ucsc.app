@@ -20,7 +20,8 @@ they're both the same building, hence why selectedBuilding and locationName are 
 export default function BuildingPopup({ locationName, locationAddress, term }: { locationName: string; locationAddress: string, term: number }) {
 	const ctx = useContext(Context);
 
-	const [fetchRooms, rooms, setRooms] = GetRooms() as [(building: string) => void, Array<RoomsInBuilding>, (a: any) => void];
+	// todo: fix unknown type later
+	const [fetchRooms, rooms, setRooms] = GetRooms() as [(building: string) => void, Array<RoomsInBuilding>, (a: unknown) => void];
 
 	const [selectedBuilding, setSelectedBuilding] = useState<string>("");
 	const [selectedRoom, setSelectedRoom] = useState<string>("");
