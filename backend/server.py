@@ -5,7 +5,8 @@ import endpoints.menu as menu
 import endpoints.news as news
 from locations import locations
 from contextlib import asynccontextmanager
-import uvicorn, httpx
+import uvicorn
+import httpx
 
 # this function runs on startup
 @asynccontextmanager
@@ -19,11 +20,15 @@ async def lifespan(app: FastAPI):
 
 api = FastAPI(lifespan=lifespan)
 api.add_middleware(
-    CORSMiddleware, 
-    allow_origins=["*"], 
+    CORSMiddleware,
+    allow_origins=[
+    "http://localhost:5173",
+    "http://localhost:8080",
+    "https://ucsc.app/",
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET, POST"],
+    allow_headers=["Content-Type"],
 )
 
 @api.get("/test")
@@ -37,6 +42,3 @@ api.include_router(scraper.router)
 
 if __name__ == '__main__':
     uvicorn.run('server:api', host='0.0.0.0', port=8000, reload=True)
-
-
-
