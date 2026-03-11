@@ -4,6 +4,18 @@ import {statusEmoji} from "./StatusEmoji";
 import ExternalLinkIcon from '/icons/external-link.svg';
 import BackIcon from '/icons/back-arrow.svg';
 
+interface Instructor {
+	name: string;
+}
+
+interface Meeting {
+	days: string;
+	start_time: string;
+	end_time: string;
+	location: string;
+	instructors: Instructor[];
+}
+
 interface DetailedViewProps {
     details: string,
     modality: string,
@@ -103,7 +115,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({ details, modality, link, is
                 <div
                     className="meetings classDetails">
                     <h3 className="heading">Meeting Times</h3>
-                    {detailsObj.meetings.map((meeting: any, index: number) => {
+                    {detailsObj.meetings.map((meeting: Meeting, index: number) => {
                         return (
                             <div key={index} style={{ marginBottom: '15px' }}>
                                 <p><strong>Day and Times:</strong> {meeting.days} {meeting.start_time}-{meeting.end_time}</p>

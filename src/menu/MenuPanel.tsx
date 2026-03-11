@@ -11,7 +11,7 @@ interface MenuPanelProps {
 
 export function MenuPanel(props: MenuPanelProps) {
     const locationMenus = Object.entries(props.menu).filter(
-        ([_, meal]) => Object.keys(meal).length > 0 // Only include non-empty meals
+        ([, meal]) => Object.keys(meal).length > 0 // Only include non-empty meals
       );
     return (
         <>
@@ -46,29 +46,3 @@ export function MenuPanel(props: MenuPanelProps) {
         </>
     )
 }
-    
-    
-    
-    // export function MenuPanel(props: MenuPanelProps) {
-    //     return (
-    //         <>
-    //         {Object.entries(props.menu).map(([mealName, meal]) => (
-    //             <div key={mealName}>
-    //             <h2>{mealName}</h2>
-    //             {Object.entries(meal).map(([groupName, foodGroup]) => (
-    //                 <div key={groupName}>
-    //                 <h3>{groupName}</h3>
-    //                 <ul>
-    //                 {Object.entries(foodGroup).map(([foodName, foodItem]) => (
-                        
-    //                 ))}
-    //                 </ul>
-    //                 </div>
-                    
-    //             ))}
-    //             </div>
-    //         ))}
-    //         </>
-    //     )
-    // }
-    

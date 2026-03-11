@@ -39,10 +39,10 @@ export default function BuildingPopup({ locationName, locationAddress, term }: {
 		setSelectedSchedule([]);
 		setWasRoomSelected(false);
 		fetchRooms(locationName);
-	}, [locationName, locationAddress]);
+	}, [locationName, locationAddress, fetchRooms, setRooms]);
 
 	// whenever a button with a room number is clicked, fetch the schedule for that
-	// room from the api 
+	// room from the api
 	useEffect(() => {
 		if (!selectedBuilding || !selectedRoom) return;
 
@@ -53,7 +53,7 @@ export default function BuildingPopup({ locationName, locationAddress, term }: {
 			.then(res => {
 				setSelectedSchedule(res);
 			});
-	}, [selectedRoom, day, term]);
+	}, [selectedRoom, day, term, selectedBuilding]);
 
 	const contextValues = {
 		selectedBuilding,

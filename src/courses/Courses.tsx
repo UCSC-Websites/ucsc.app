@@ -36,7 +36,7 @@ const useMediaQuery = (query: string) => {
 };
 
 function parseInput(query: string) {
-	let results = {
+	const results = {
 		dept: "",
 		catalogNum: ""
 	};
@@ -104,7 +104,7 @@ export default function Courses() {
 
 	const onSearch = (query: string) => {
 		if (isFirstLoad) setFirstLoad(false);
-		
+
 		const inputData = parseInput(query);
 
 		fetchCourses(inputData);
@@ -118,15 +118,15 @@ export default function Courses() {
 				{isMobile ? <MobileTopBar /> : <DesktopTopBar />}
 			</div>
 			<div className="parent" style={{ flexDirection: isMobile ? 'column' : 'row', justifyContent: 'center' }}>
-				<div 
-					className="contentLeft" 
-					style={{ 
-						width: isMobile ? '100%' : '30%', 
+				<div
+					className="contentLeft"
+					style={{
+						width: isMobile ? '100%' : '30%',
 						display: isMobile && showDetails ? 'none' : 'flex',
 						padding: isMobile ? '10px 0' : '10px'
 					}}
 				>
-					<div className="search-wrapper" style={{ 
+					<div className="search-wrapper" style={{
 						width: isMobile ? '90%' : '100%',
 						boxSizing: 'border-box',
 						paddingRight: isMobile ? '0' : '0px',
@@ -162,9 +162,9 @@ export default function Courses() {
 						}
 					</div>
 				</div>
-				<div 
-					className="contentRight" 
-					style={{ 
+				<div
+					className="contentRight"
+					style={{
 						display: (isMobile && !showDetails) ? 'none' : 'block',
 						height: isMobile ? 'auto' : 'calc(100vh - 60px)',
 						minHeight: isMobile ? 'calc(100vh - 60px)' : 'auto',

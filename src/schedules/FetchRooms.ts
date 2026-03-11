@@ -10,7 +10,7 @@ export default function GetRooms() {
 
 	const fetchRooms = (name: string) => {
 		setLoading(true);
-		let pisaName: string | string[] = buildingLookup[name as keyof typeof buildingLookup];
+		const pisaName: string | string[] = buildingLookup[name as keyof typeof buildingLookup];
 		const pisaNames: string[] = Array.isArray(pisaName) ? pisaName : [pisaName];
 
 		Promise.all(

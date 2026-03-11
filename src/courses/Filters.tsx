@@ -33,7 +33,7 @@ const fallbackTerms = [
     { label: "2025 Fall", value: "2258" },
     { label: "2025 Summer", value: "2254" },
     { label: "2025 Spring", value: "2252" },
-    
+
 ];
 
 export default function Filters({ selectedTerm, setTerm, setGE, setStatus, setTimes }: FilterProps) {
@@ -47,11 +47,11 @@ export default function Filters({ selectedTerm, setTerm, setGE, setStatus, setTi
             setTerm(options[0].value);
         })();
 
-    }, []);
+    }, [ setTerm ]);
 
     return (
         <div className="filters" style={{ width: '97.5%', paddingLeft: '10px', display: 'flex', flexDirection: 'row', gap: '4px' }}>
-                    
+
             {/* Quarter select */}
             <select
                 name="quarter"
