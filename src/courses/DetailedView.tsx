@@ -3,6 +3,7 @@ import './styles/DetailedView.css';
 import {statusEmoji} from "./StatusEmoji";
 import ExternalLinkIcon from '/icons/external-link.svg';
 import BackIcon from '/icons/back-arrow.svg';
+import { generateIcs } from "./generateIcs";
 
 interface Instructor {
 	name: string;
@@ -38,6 +39,7 @@ interface DetailedViewProps {
     details: string,
     modality: string,
     link: string,
+    term: string,
     isMobile?: boolean,
     handleBack: () => void
 }
@@ -51,7 +53,7 @@ function classDetailsGridEntry(title: string, content: string) {
     )
 }
 
-const DetailedView: React.FC<DetailedViewProps> = ({ details, modality, link, isMobile, handleBack }) => {
+const DetailedView: React.FC<DetailedViewProps> = ({ details, modality, link, term, isMobile, handleBack }) => {
     const detailsObj = JSON.parse(details);
     const spacer = (<div style={{ height: '0px', margin: '20px 0' }}></div>)
 
@@ -89,6 +91,22 @@ const DetailedView: React.FC<DetailedViewProps> = ({ details, modality, link, is
                 <div>
                     <h3 style={isMobile ? { fontSize: '1.2rem', paddingLeft: '7px', paddingRight: '0px' } : {}}>{detailsObj.primary_section.subject}-{detailsObj.primary_section.catalog_nbr}: {detailsObj.primary_section.title_long}</h3>
                 </div>
+                <button
+                    onClick={() => {
+                        const ics = generateIcs(details, term);
+                        const blob = new Blob([ics], { type: 'text/calendar' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${detailsObj.primary_section.subject}-${detailsObj.primary_section.catalog_nbr}.ics`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    }}
+                    className="pisaButton"
+                    title="Download calendar file"
+                >
+                    Add to Calendar
+                </button>
                 <button
                     onClick={() => window.open(link, '_blank')}
                     className="pisaButton"

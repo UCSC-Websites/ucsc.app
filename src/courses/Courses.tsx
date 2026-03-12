@@ -171,7 +171,7 @@ export default function Courses() {
 					}}
 				>
 					{spacer}
-					{detailedData ? <DetailedView details={detailedData} modality={selectedClassModality} link={selectedClassLink} isMobile={isMobile} handleBack={() => {setShowDetails(false)}} /> :
+					{detailedData ? <DetailedView details={detailedData} modality={selectedClassModality} link={selectedClassLink} term={term} isMobile={isMobile} handleBack={() => {setShowDetails(false)}} /> :
 						<div style={{ width: '100%', height: 'calc(100% - 30px)', backgroundColor: 'var(--detailed-class-info-color)' }}></div>
 					}
 				</div>
