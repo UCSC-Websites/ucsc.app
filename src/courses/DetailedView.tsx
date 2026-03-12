@@ -579,6 +579,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 							);
 						},
 					)}
+			{spacer}
 				</div>
 			)}
 
