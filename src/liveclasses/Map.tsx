@@ -1,4 +1,4 @@
-import {useState } from "react";
+import {useState, useContext } from "react";
 import { MapContainer, TileLayer, GeoJSON, Popup, /* useMapEvents, */ ZoomControl } from "react-leaflet";
 import { Layer, LatLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -6,6 +6,7 @@ import "./styles/Map.css";
 import buildingsData from "./data/temp4.json";
 import { Feature, Geometry } from "geojson";
 import BuildingPopup from "./BuildingPopup";
+import { Context } from "../Context";
 
 interface BuildingProperties {
 	BUILDINGNAME: string;
@@ -59,6 +60,7 @@ function getAllTerms() {
 // }
 
 export default function Map() {
+	const ctx = useContext(Context);
 	const [selectedFeature, setSelectedFeature] = useState<Feature<Geometry, BuildingProperties> | null>(null);
 	const [popupPosition, setPopupPosition] = useState<LatLng | null>(null);
 	const [selectedTerm, setSelectedTerm] = useState<number>(2260);
@@ -101,15 +103,17 @@ export default function Map() {
 			>
 			<ZoomControl position="bottomright" />
 			<TileLayer
-				url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
-				attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
+				// url={`https://{s}.basemaps.cartocdn.com/rastertiles/${ctx?.theme === "dark" ? "dark_nolabels" : "voyager_nolabels"}/{z}/{x}/{y}{r}.png`}
+				url={ `${ctx?.theme === "dark" ? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" }` }
+				// attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
+				attribution={ `${ctx?.theme === "dark" ? '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' : '&copy; <a href="https://carto.com/attributions">CARTO' }` }
 				subdomains="abcd"
 				maxZoom={30}
 			/>
 			<GeoJSON
 				data={buildingsData as GeoJSON.GeoJsonObject}
 				style={{
-					color: '#3388ff',
+					color: ctx?.theme === "dark" ? '#88ccff' : '#3388ff',
 					weight: 2,
 					opacity: 0.8,
 					fillOpacity: 0.3
