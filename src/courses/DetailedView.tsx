@@ -82,7 +82,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 				overflowY: "auto" as const,
 				width: "100%",
 				padding: "0 0px",
-				margin: '0px 0px',
+				margin: "0px 0px",
 				// border: "5px solid green",
 			}
 		: {};

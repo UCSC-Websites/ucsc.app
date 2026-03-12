@@ -1,12 +1,16 @@
 import './styles/Search.css';
 import { useState } from 'react';
 
+import { useRef } from 'react';
+
 interface SearchProps {
 	onSearch: (query: string) => void;
 }
 
 const Search: React.FC<SearchProps> = ({ onSearch }) => {
 	const [searchText, setSearchText] = useState('');
+
+	const searchBoxRef = useRef<HTMLInputElement>(null);
 
 	return (
 		<div className="searchContainer">
@@ -31,6 +35,7 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
 					<line x1="21" y1="21" x2="16.65" y2="16.65" />
 				</svg>
 				<input
+					ref={searchBoxRef}
 					className="searchBox"
 					type="text"
 					placeholder="Search..."
@@ -41,6 +46,7 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
 					onKeyDown={(e) => {
 						if (e.key === 'Enter') {
 							onSearch(searchText);
+							searchBoxRef.current?.blur();
 						}
 					}}
 				/>
