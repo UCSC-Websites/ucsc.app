@@ -283,6 +283,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 			{detailsObj.primary_section && (
 				<div className="classDetails">
 					<h3 className="heading">Class Details</h3>
+					<div className="classDetailsGridWrapper">
 					<div
 						className="classDetailsGrid"
 						style={classDetailsGridStyle}
@@ -320,6 +321,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 							"Career",
 							detailsObj.primary_section.acad_career,
 						)}
+						</div>
 					</div>
 				</div>
 			)}

@@ -109,6 +109,7 @@
 }
 
 .classDetails {
+	/*border: 5px solid red;*/
 	border-radius: 8px;
 	padding: 15px;
 	margin-bottom: 15px;
@@ -120,10 +121,19 @@
 
 .classDetailsGrid {
 	display: grid;
+	/*border: 5px solid chartreuse;*/
 	grid-template-columns: repeat(4, 1fr);
 	gap: 15px;
 	max-width: 800px;
 	margin: 0 auto;
 	justify-content: center;
 	align-items: center;
+	margin: 0;
+}
+
+
+.classDetailsGridWrapper {
+	align-items: left;
+	justify-content: left;
+	/*border: 5px solid blue;*/
 }
