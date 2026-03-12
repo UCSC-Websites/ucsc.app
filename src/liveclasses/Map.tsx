@@ -65,11 +65,21 @@ export default function Map() {
 	const [popupPosition, setPopupPosition] = useState<LatLng | null>(null);
 	const [selectedTerm, setSelectedTerm] = useState<number>(2260);
 	const [darkOrMatrix, setDOM] = useState<number>(0);
+	const [forestStyle, setForestStyle] = useState<number>(0);
 
 	// const bounds: [[number, number], [number, number]] = [
 	// 	[36.9750, -122.0750],
 	// 	[37.0050, -122.0450]
 	// ];
+
+	const ForestStyle = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=ddf4c34e-9539-4e4f-b94f-56a086985157';
+	const DarkRoads = 'https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=8RErnjtHMpVFJM2OhXpfbpcxR3zMlce5MiDSPG0Y3dFELNYDGXDTbQnDc4OX5kxy'
+	const DarkHighlightedRoads = 'https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=8RErnjtHMpVFJM2OhXpfbpcxR3zMlce5MiDSPG0Y3dFELNYDGXDTbQnDc4OX5kxy'
+	const LightStyle = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+
+	const JawgAttribution = '<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	const StadiaForestAttribution = '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	const LightCartoAttribution = '&copy; <a href="https://carto.com/attributions">CARTO</a>'
 
 	const onEachFeature = (feature: Feature<Geometry, BuildingProperties>, layer: Layer) => {
 		layer.on('click', (e) => {
@@ -94,11 +104,16 @@ export default function Map() {
 
 				{ ctx?.theme === "dark" && <select
 					value={darkOrMatrix}
-					onChange={(e) => setDOM(Number(e.target.value))}
+					onChange={(e) => {
+						setDOM(Number(e.target.value));
+						setForestStyle(Number(e.target.value));
+					}
+					}
 					className="termSelector"
 				>
 					<option value="0">Dark (Standard Roads)</option>
 					<option value="1">Dark (Highlighted Roads)</option>
+					<option value="2">Dark (Forest-style)</option>
 				</select>}
 			</div>
 			<MapContainer
@@ -114,14 +129,8 @@ export default function Map() {
 
 			<ZoomControl position="bottomright" />
 			<TileLayer
-				url={ ctx?.theme === "dark"
-						? darkOrMatrix == 0 ? 'https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=8RErnjtHMpVFJM2OhXpfbpcxR3zMlce5MiDSPG0Y3dFELNYDGXDTbQnDc4OX5kxy' :
-							'https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=8RErnjtHMpVFJM2OhXpfbpcxR3zMlce5MiDSPG0Y3dFELNYDGXDTbQnDc4OX5kxy'
-					: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-				}
-				attribution={ ctx?.theme === "dark"
-					? '<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-					: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
+				url={ ctx?.theme === "dark" ? forestStyle == 2 ? ForestStyle : darkOrMatrix == 0 ? DarkRoads : DarkHighlightedRoads : LightStyle }
+				attribution={ ctx?.theme === "dark" ? forestStyle == 2 ? StadiaForestAttribution : JawgAttribution : LightCartoAttribution
 				}
 				subdomains="abcd"
 				maxZoom={30}
