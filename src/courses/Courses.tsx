@@ -9,6 +9,8 @@ import Filters from "./Filters.tsx";
 import { BASE_API_URL } from "../constants.ts";
 import { Loading } from "../components/loading/Loading.tsx";
 
+import './styles/Courses.css'
+
 interface Course {
 	status: string;
 	link: string;
@@ -166,7 +168,7 @@ export default function Courses() {
 						}}
 					>
 						{isFirstLoad ? (
-							<h3>Search for a course to get started!</h3>
+							<h3 className="CourseIntroText">Search for a course to get started!</h3>
 						) : !courses || courses.length === 0 ? (
 							<h3>No results found</h3>
 						) : (

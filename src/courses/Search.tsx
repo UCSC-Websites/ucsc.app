@@ -43,6 +43,7 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
 					onChange={(e) => {
 						setSearchText(e.target.value);
 					}}
+					style={{ minWidth: '0px' }}
 					onKeyDown={(e) => {
 						if (e.key === 'Enter') {
 							onSearch(searchText);

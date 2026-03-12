@@ -9,4 +9,41 @@
     cursor: pointer;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     text-align: center;
+	/*border: 5px solid green;*/
+}
+
+.filters {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	width: 97.5%;
+	gap: 4px;
+}
+
+
+@media (max-width: 460px) {
+	.filters {
+		display: grid;
+		/*border: 5px solid green;*/
+		/*align-items: center;*/
+		/*justify-content: center;*/
+		justify-items: center;
+		/*text-align: center;*/
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.5rem;
+	}
+
+	.dropdown {
+		min-width: 100%;
+	}
+}
+
+@media (max-width: 320px) {
+	.filters {
+		grid-template-columns: repeat(1, 1fr);
+	}
+
+	.dropdown {
+		min-width: 100%;
+	}
 }

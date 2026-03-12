@@ -2,6 +2,8 @@ import {useEffect, useState} from "react";
 import {BASE_API_URL} from "../constants";
 // import {data, data} from "react-router";
 
+import './styles/Filters.css';
+
 interface FilterProps {
     isMobile?: boolean,
 
@@ -50,7 +52,7 @@ export default function Filters({ selectedTerm, setTerm, setGE, setStatus, setTi
     }, [ setTerm ]);
 
     return (
-        <div className="filters" style={{ width: '97.5%', paddingLeft: '10px', display: 'flex', flexDirection: 'row', gap: '4px' }}>
+		<div className="filters">
 
             {/* Quarter select */}
             <select
