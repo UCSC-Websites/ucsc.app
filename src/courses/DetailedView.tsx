@@ -119,8 +119,8 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 							isMobile
 								? {
 										fontSize: "1.2rem",
-										paddingLeft: "7px",
-										paddingRight: "0px",
+										paddingLeft: "8px",
+										paddingRight: "8px",
 									}
 								: {}
 						}
@@ -227,8 +227,8 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 							<img
 								src={DownloadIcon}
 								alt="View in Pisa"
-								width="30"
-								height="30"
+								width="25"
+								height="25"
 								style={{ verticalAlign: "middle" }}
 							/>
 							Download Calendar .ics
@@ -255,8 +255,8 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 						>
 							<img
 								src={GoogleCalendarIcon}
-								width="30"
-								height="30"
+								width="25"
+								height="25"
 							/>
 							Add to Google Calendar
 						</button>
@@ -268,8 +268,8 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 							<img
 								src={ExternalLinkIcon}
 								alt="View in Pisa"
-								width="30"
-								height="30"
+								width="25"
+								height="25"
 								style={{ verticalAlign: "middle" }}
 							/>
 							View Source
