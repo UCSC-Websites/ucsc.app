@@ -104,7 +104,7 @@ export default function Map() {
 			<ZoomControl position="bottomright" />
 			<TileLayer
 				// url={`https://{s}.basemaps.cartocdn.com/rastertiles/${ctx?.theme === "dark" ? "dark_nolabels" : "voyager_nolabels"}/{z}/{x}/{y}{r}.png`}
-				url={ `${ctx?.theme === "dark" ? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png" : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" }` }
+				url={ `${ctx?.theme === "dark" ? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png&api_key=ddf4c34e-9539-4e4f-b94f-56a086985157" : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" }` }
 				// attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
 				attribution={ `${ctx?.theme === "dark" ? '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' : '&copy; <a href="https://carto.com/attributions">CARTO' }` }
 				subdomains="abcd"
