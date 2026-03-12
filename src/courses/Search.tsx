@@ -14,7 +14,7 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
 				<svg
 					style={{
 						position: 'absolute',
-						top: '50%',
+						top: '45%',
 						left: '22px',
 						transform: 'translateY(-50%)',
 						color: '#9aa0a6',
@@ -44,7 +44,7 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
 						}
 					}}
 				/>
-				<button 
+				<button
 					className="searchButton"
 					onClick={() => {
 						onSearch(searchText);

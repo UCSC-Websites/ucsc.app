@@ -76,7 +76,7 @@ export default function Filters({ selectedTerm, setTerm, setGE, setStatus, setTi
                 style={{ width: 'calc(20% - 3px)' }}
                 onChange={(e) => { setGE(e.target.value) }}
             >
-                {["AnyGE", "AH&I", "C", "CC", "ER", "IM", "MF", "PE-E", "PE-H", "PE-T", "PR-C", "PR-E", "PR-S", "SI", "SR", "TA"].map((ge: string, idx: number) => (
+                {["Any GE", "AH & I", "C", "CC", "ER", "IM", "MF", "PE-E", "PE-H", "PE-T", "PR-C", "PR-E", "PR-S", "SI", "SR", "TA"].map((ge: string, idx: number) => (
                     <option key={idx} value={ge}>{ge}</option>
                 ))}
             </select>
@@ -106,7 +106,8 @@ export default function Filters({ selectedTerm, setTerm, setGE, setStatus, setTi
                 <option value="Afternoon">Afternoon</option>
                 <option value="Evening">Evening</option>
                 {/* Time options... */}
-                <option value="08:00PM09:45PM">08:00PM-09:45PM</option>
+                {/*<option value="08:00PM09:45PM">08:00PM-09:45PM</option>*/}
+                <option value="Night">Night</option>
             </select>
         </div>
 
