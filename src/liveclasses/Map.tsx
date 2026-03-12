@@ -64,6 +64,7 @@ export default function Map() {
 	const [selectedFeature, setSelectedFeature] = useState<Feature<Geometry, BuildingProperties> | null>(null);
 	const [popupPosition, setPopupPosition] = useState<LatLng | null>(null);
 	const [selectedTerm, setSelectedTerm] = useState<number>(2260);
+	const [darkOrMatrix, setDOM] = useState<number>(0);
 
 	// const bounds: [[number, number], [number, number]] = [
 	// 	[36.9750, -122.0750],
@@ -90,6 +91,15 @@ export default function Map() {
 						<option key={term} value={term}>{termToString(term)}</option>
 					))}
 				</select>
+
+				{ ctx?.theme === "dark" && <select
+					value={darkOrMatrix}
+					onChange={(e) => setDOM(Number(e.target.value))}
+					className="termSelector"
+				>
+					<option value="0">Dark (Standard Roads)</option>
+					<option value="1">Dark (Highlighted Roads)</option>
+				</select>}
 			</div>
 			<MapContainer
 				center={[36.9914, -122.0609]}
@@ -101,14 +111,16 @@ export default function Map() {
 				zoomControl={false}
 				className="mapContainerComponent"
 			>
+
 			<ZoomControl position="bottomright" />
 			<TileLayer
 				url={ ctx?.theme === "dark"
-					? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=ddf4c34e-9539-4e4f-b94f-56a086985157"
+						? darkOrMatrix == 0 ? 'https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=8RErnjtHMpVFJM2OhXpfbpcxR3zMlce5MiDSPG0Y3dFELNYDGXDTbQnDc4OX5kxy' :
+							'https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=8RErnjtHMpVFJM2OhXpfbpcxR3zMlce5MiDSPG0Y3dFELNYDGXDTbQnDc4OX5kxy'
 					: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
 				}
 				attribution={ ctx?.theme === "dark"
-					? '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+					? '<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 					: '&copy; <a href="https://carto.com/attributions">CARTO</a>'
 				}
 				subdomains="abcd"
