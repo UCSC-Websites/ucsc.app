@@ -15,10 +15,7 @@ export default function ThemeToggle() {
 			<Icon
 				svg={ctx!.theme === "light" ? ToggleDarkModeIcon : ToggleLightModeIcon}
 				data={""}
-				// alt={theme === "light" ? "Switch to dark mode" : "Switch to light mode"} 
-				// size={20} 
 			/>
-			{/* Toggle {theme === "light" ? "Dark" : "Light"} Mode */}
 		</button>
 	);
 }

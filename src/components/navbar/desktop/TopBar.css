@@ -1,51 +1,27 @@
-.app-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    padding: 0 1rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-  }
-  
-  .nav-bar__nav {
-    display: flex;
-    gap: 0rem;
-  }
-
-  .nav-bar__nav a {
-    padding: 20px;
-    height: auto;
-    &:hover {
-      background-color: var(--bg-color);
-      transition: 0.25s ease-in-out;
-    }
-  }
-  
-  .nav-bar__theme-toggle {
-    display: flex;
-    align-items: center;
-    /* width: 250px; */
-  }
-  
-  .glass-topbar {
-    background-color: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
+.top-bar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: var(--card-bg);
+	color: var(--text-color);
+	padding: 0 1rem;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+	z-index: 1000;
+	transition:
+		background-color 0.4s ease,
+		backdrop-filter 0.4s ease;
 }
 
-[data-theme="light"] .glass-topbar {
-  background-color: rgba(255, 255, 255, 0.4);
-}
-
-[data-theme="dark"] .glass-topbar {
-  background-color: rgba(30, 30, 30, 0.4);
+.nav-buttons a {
+	padding: 20px;
+	height: auto;
+	&:hover {
+		background-color: var(--bg-color);
+		transition: 0.25s ease-in-out;
+	}
 }

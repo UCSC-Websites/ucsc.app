@@ -8,25 +8,28 @@ export function TopBar() {
 	const ctx = useContext(Context);
 	return (
 		<>
-			<header className="app-bar">
+			<header className="top-bar">
+				<div />
 
-				<div className={`hamburger ${ctx?.isDrawerOpen ? 'open' : ''}`}
+				<div
+					className={`hamburger ${ctx?.isDrawerOpen ? "open" : ""}`}
 					onClick={() => ctx?.setDrawerOpen(!ctx?.isDrawerOpen)}
 				>
 					<span />
 					<span />
 					<span />
 				</div>
-				<div className="nav-bar__theme-toggle">
-					<ThemeToggle />
-				</div>
-			</header>
 
-			<aside className={`drawer ${ctx?.isDrawerOpen ? 'open' : ''}`}>
-				<nav className="drawer__nav">
-					<NavBarButtons onClick={() => ctx?.setDrawerOpen(false)} />
-				</nav>
-			</aside>
+				<ThemeToggle />
+
+				<aside className={`drawer ${ctx?.isDrawerOpen ? "open" : ""}`}>
+					<nav className="drawer__nav">
+						<NavBarButtons
+							onClick={() => ctx?.setDrawerOpen(false)}
+						/>
+					</nav>
+				</aside>
+			</header>
 		</>
 	);
 }
