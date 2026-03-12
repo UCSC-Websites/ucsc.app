@@ -137,10 +137,19 @@ export default function Courses() {
 						<Filters isMobile={isMobile} selectedTerm={term} setTerm={setTerm} setGE={setGE} setTimes={setTimes} setStatus={setStatus} />
 					</div>
 					{loading && <Loading />}
-					<div className="courseList" style={{ marginTop: isMobile ? '20px' : '30px' }}>
+					<div className="courseList" style={{
+						marginTop: isMobile ? '20px' : '30px',
+					}}>
 						{isFirstLoad ? <h3>Search for a course to get started!</h3> :
 						!courses || courses.length === 0 ? <h3>No results found</h3> :
 						courses.map((course: Course, index: number) => (
+							<div
+								style={{
+									// border: '5px solid green',
+									marginLeft: isMobile ? '20px' : '0px',
+									marginRight: isMobile ? '20px' : '0px',
+								}}>
+
 								<Card
 									key={index}
 									classStatus={course.status}
@@ -158,6 +167,7 @@ export default function Courses() {
 										getDetailedView(classTerm, classID);
 									}}
 								/>
+								</div>
 							))
 						}
 					</div>
@@ -166,6 +176,7 @@ export default function Courses() {
 					className="contentRight"
 					style={{
 						display: (isMobile && !showDetails) ? 'none' : 'block',
+						// border: '5px solid green',
 						height: isMobile ? 'auto' : 'calc(100vh - 60px)',
 						minHeight: isMobile ? 'calc(100vh - 60px)' : 'auto',
 					}}
