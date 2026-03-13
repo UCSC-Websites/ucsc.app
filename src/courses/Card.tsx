@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({ classStatus, className, instructor, locatio
     const ctx = useContext(Context);
 	
 	return (
-        <div className="cardParent" onClick={() => { onCardClick(term, classID) }}>
+        <article className="cardParent" onClick={() => { onCardClick(term, classID) }}>
             <div className="card">
                 <div className="classInfo">
                     <div style={{display: "flex", width: "100%"}}>
@@ -67,7 +67,7 @@ const Card: React.FC<CardProps> = ({ classStatus, className, instructor, locatio
                     )}
                 </div>
             </div>
-        </div>
+        </article>
     );
 }
 

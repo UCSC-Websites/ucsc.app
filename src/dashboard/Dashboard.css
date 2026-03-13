@@ -7,6 +7,11 @@
     overflow: hidden;
 }
 
+.WelcomeButtons {
+	display: grid;
+	gap: 8px;
+}
+
 /* Hero Section */
 .hero-section {
     flex: 1;
@@ -54,6 +59,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(255, 184, 28, 0.3);
+    /*width: fit-content;*/
 }
 
 .hero-cta:hover {

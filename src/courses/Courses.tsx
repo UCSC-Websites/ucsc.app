@@ -101,8 +101,16 @@ export default function Courses() {
 
 			setLoading(true);
 
+			const params = new URLSearchParams({
+				term,
+				regStatus: status,
+				department: inputData.dept,
+				catalogNum: inputData.catalogNum,
+				ge,
+				meetingTimes: time,
+			});
 			const response = await fetch(
-				`${BASE_API_URL}/courses?term=${term}&regStatus=all&department=${inputData.dept}&catalogNum=${inputData.catalogNum}&ge=${ge}&regStatus=${status}&meetingTimes=${time}`,
+				`${BASE_API_URL}/courses?${params}`,
 				{ signal: abortControllerRef.current.signal },
 			);
 			const data = await response.json();
@@ -137,11 +145,11 @@ export default function Courses() {
 	const spacer = <div style={{ height: "0px", margin: "30px 0" }}></div>;
 
 	return (
-		<div className="courses-page">
+		<main className="courses-page">
 			<div className="topbar-container">
 				{isMobile ? <MobileTopBar /> : <DesktopTopBar />}
 			</div>
-			<div
+			<main
 				className="parent"
 				style={{
 					flexDirection: isMobile ? "column" : "row",
@@ -149,7 +157,7 @@ export default function Courses() {
 					// border: '5px solid green',
 				}}
 			>
-				<div
+				<section
 					className="contentLeft"
 					style={{
 						width: isMobile ? "100%" : "30%",
@@ -188,11 +196,11 @@ export default function Courses() {
 					>
 						{isFirstLoad ? (
 							<>
-								<h3>Search to get started!</h3>
-								<h3>E.g. "CSE 130"</h3>
+								<p>Search to get started!</p>
+								<p>E.g. "CSE 130"</p>
 							</>
 						) : !courses || courses.length === 0 ? (
-							<h3>No results found</h3>
+							<p>No results found</p>
 						) : (
 							courses.map((course: Course, index: number) => (
 								<div
@@ -231,7 +239,7 @@ export default function Courses() {
 							))
 						)}
 					</div>
-				</div>
+				</section>
 				<div
 					className="contentRight"
 					style={{
@@ -264,7 +272,7 @@ export default function Courses() {
 						></div>
 					)}
 				</div>
-			</div>
-		</div>
+			</main>
+		</main>
 	);
 }

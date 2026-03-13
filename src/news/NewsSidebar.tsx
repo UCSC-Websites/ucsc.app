@@ -8,7 +8,7 @@ interface NewsSidebarProps {
 
 export default function NewsSidebar({ FEEDS, setSelectedFeeds, selectedFeeds, toggleFeed }: NewsSidebarProps) {
 	return (
-		<div className="SideBar">
+		<aside className="SideBar">
 			<div>
 				<h2>Categories</h2>
 
@@ -42,6 +42,6 @@ export default function NewsSidebar({ FEEDS, setSelectedFeeds, selectedFeeds, to
 				style={{ marginBottom: '10px', width: '100%' }}>
 				{selectedFeeds.length === FEEDS.length ? "Deselect All" : "Select All"}
 			</button>
-		</div>
+		</aside>
 	)
 }

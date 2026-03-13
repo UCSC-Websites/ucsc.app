@@ -103,11 +103,11 @@ export default function RssFeed() {
 		<>
 			{ctx!.mobile ? <MobileTopBar /> : <DesktopTopBar />}
 
-			<div className="RssFeedMain">
+			<main className="RssFeedMain">
 				{!ctx!.mobile ? <NewsSidebar {...{ FEEDS, setSelectedFeeds, selectedFeeds, toggleFeed }} /> : <></>}
 
 				{error ? <Error>Error Loading News</Error> :
-					<div className="RSS_Feed">
+					<section className="RSS_Feed">
 						{ctx!.mobile ? (
 							<div style={{ textAlign: 'left' }}>
 								<h1 style={{ marginBottom: '-33px' }}>UCSC News</h1>
@@ -119,8 +119,8 @@ export default function RssFeed() {
 						{selectedItems.map((item, i) => (
 							<NewsCard key={i} index={i} {...item} />
 						))}
-					</div>}
-			</div>
+					</section>}
+			</main>
 		</>
 	);
 };

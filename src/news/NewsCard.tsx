@@ -23,19 +23,21 @@ function formatDate(date: string) {
 
 export default function NewsCard(props: NewsCardProps) {
 	return (
-		<div
+		<article
 			className="RSS_FeedItem"
 			style={{ "--delay": `${props.index * 115}ms` } as React.CSSProperties}
 		>
-			<a href={props.link} target="_blank" rel="noopener noreferrer">
-				{props.title}
-			</a>
+			<h2 style={{ margin: 0, fontSize: 'inherit', fontWeight: 'inherit' }}>
+				<a href={props.link} target="_blank" rel="noopener noreferrer">
+					{props.title}
+				</a>
+			</h2>
 			<br />
 			<div style={{display: 'flex', flexWrap: 'wrap', columnGap: '5px', rowGap: '2px'}}>
 				{props.categories.map(c => (<Tag name={c} />))}
 			</div>
-			<p className="date">{formatDate(props.published)}</p>
+			<time className="date" dateTime={props.published}>{formatDate(props.published)}</time>
 			<p style={{fontSize: '15px'}}>{props.summary}</p>
-		</div>
+		</article>
 	)
 }

@@ -27,7 +27,9 @@ export default function LiveClassesMapPage() {
 	return (
 		<>
 			{ctx!.mobile ? <MobileTopBar /> : <DesktopTopBar />}
-			<Map />
+			<main>
+				<Map />
+			</main>
 		</>
 	)
 }

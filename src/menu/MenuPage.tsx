@@ -38,7 +38,7 @@ export default function MenuPage() {
 
     useEffect(() => {
         const abortController = new AbortController();
-        
+
         (async () => {
             const menus: Record<number, Record<string, Menu>> = {};
 
@@ -56,7 +56,7 @@ export default function MenuPage() {
             setMenuData(menus);
             setLoading(false);
         })()
-        
+
         return () => {
             abortController.abort();
         };
@@ -65,15 +65,15 @@ export default function MenuPage() {
         <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw'}}>
             {contextValues?.mobile ? (<MobileTopBar />) : (<DesktopTopBar />)}
             {/* <DateHeader/> */}
-            
-            
-            <div style={{width: '100%', overflowX: 'scroll', flex: 1}}>
+
+
+            <main style={{width: '100%', overflowX: 'scroll', flex: 1}}>
             {loading ? <Loading/> : error ? <Error>Error Loading Menus</Error> : (
                 <div className="MenuPanelDelay" style={{ "--delay": `${1 * 115}ms` } as React.CSSProperties}>
                     {contextValues?.mobile ? (<MobileMenu>{menuData}</MobileMenu>) : (<DesktopMenu>{menuData}</DesktopMenu>)}
                 </div>
             )}
-            </div>
+            </main>
         </div>
     );
 }
