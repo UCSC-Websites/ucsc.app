@@ -152,7 +152,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 							>
 								<img
 									src={DownloadIcon}
-									alt="View in Pisa"
+									alt="Download calendar icon"
 									width="30"
 									height="30"
 									style={{ verticalAlign: "middle" }}
@@ -181,6 +181,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 							>
 								<img
 									src={GoogleCalendarIcon}
+									alt="Add to Google Calendar icon"
 									width="30"
 									height="30"
 								/>
@@ -193,7 +194,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 							>
 								<img
 									src={ExternalLinkIcon}
-									alt="View in Pisa"
+									alt="Open source page in new window"
 									width="30"
 									height="30"
 									style={{ verticalAlign: "middle" }}
@@ -229,7 +230,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 					>
 						<img
 							src={DownloadIcon}
-							alt="View in Pisa"
+							alt="Download calendar icon"
 							width="25"
 							height="25"
 							style={{ verticalAlign: "middle" }}
@@ -256,7 +257,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 						}}
 						className="pisaButton"
 					>
-						<img src={GoogleCalendarIcon} width="25" height="25" />
+						<img src={GoogleCalendarIcon} alt="Add to Google Calendar icon" width="25" height="25" />
 						Add to Google Calendar
 					</button>
 
@@ -266,7 +267,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 					>
 						<img
 							src={ExternalLinkIcon}
-							alt="View in Pisa"
+							alt="Open source page in new window"
 							width="25"
 							height="25"
 							style={{ verticalAlign: "middle" }}
@@ -520,7 +521,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 											>
 												<img
 													src={DownloadIcon}
-													alt="View in Pisa"
+													alt="Download calendar icon"
 													width="28"
 													height="28"
 													style={{
@@ -572,6 +573,7 @@ const DetailedView: React.FC<DetailedViewProps> = ({
 											>
 												<img
 													src={GoogleCalendarIcon}
+													alt="Add to Google Calendar icon"
 													width="28"
 													height="28"
 												/>

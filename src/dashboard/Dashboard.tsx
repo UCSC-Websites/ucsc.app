@@ -3,6 +3,7 @@ import {TopBar as DesktopTopBar} from "../components/navbar/desktop/TopBar";
 import {useContext} from "react";
 import { Context } from "../Context";
 import { usePageMeta } from "../hooks/usePageMeta.tsx";
+import { generateOrganizationSchema, generateWebsiteSchema } from "../utils/schema";
 // import { useNavigate } from "react-router";
 import './Dashboard.css';
 
@@ -10,12 +11,22 @@ export default function Dashboard() {
     const contextValues = useContext(Context);
     // const navigate = useNavigate();
 
+    // Combine both organization and website schemas
+    const combinedSchema = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            generateOrganizationSchema(),
+            generateWebsiteSchema()
+        ]
+    };
+
     usePageMeta({
         title: 'Home',
         description: 'Your all-in-one student platform for UC Santa Cruz. Discover courses, explore dining options, view campus schedules, and stay updated with campus news.',
         keywords: 'UCSC, courses, dining, schedule, campus news, UC Santa Cruz',
         ogUrl: 'https://ucsc.app/',
         canonical: 'https://ucsc.app/',
+        schema: combinedSchema,
     });
 
     return (
@@ -42,7 +53,9 @@ export default function Dashboard() {
 
 
 <div className="hero-illustration">
-    <svg viewBox="0 0 550 600" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 550 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="UC Santa Cruz campus illustration with clock tower building">
+        <title>UCSC Campus Illustration</title>
+        <desc>Illustration of UC Santa Cruz campus featuring the iconic McHenry Library clock tower with surrounding academic buildings and a decorative railing</desc>
         {/* Main building base - left wing */}
         <rect x="80" y="260" width="100" height="160" fill="none" stroke="currentColor" strokeWidth="3"/>
 

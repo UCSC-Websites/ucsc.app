@@ -43,8 +43,8 @@ export default function NewsFilter({ FEEDS, selectedFeeds, toggleFeed }: NewsFil
 					</button>
 				</div>
 			</dialog>
-			<button onClick={() => setIsOpen(true)} className="filterButton">
-				<img src={filterIcon} width='16px'></img>
+			<button onClick={() => setIsOpen(true)} className="filterButton" title="Filter news categories">
+				<img src={filterIcon} alt="Filter icon" width='16px'></img>
 			</button>
 		</>
 	);

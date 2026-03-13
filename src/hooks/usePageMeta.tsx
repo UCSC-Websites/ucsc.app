@@ -1,4 +1,6 @@
 import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
+import { clearSchemas, injectSchema } from '../utils/schema';
 
 export interface PageMetaProps {
   title: string;
@@ -7,6 +9,7 @@ export interface PageMetaProps {
   ogImage?: string;
   ogUrl?: string;
   canonical?: string;
+  schema?: Record<string, unknown>;
 }
 
 export function usePageMeta({
@@ -16,7 +19,16 @@ export function usePageMeta({
   ogImage = 'https://ucsc.app/favicon.ico',
   ogUrl = 'https://ucsc.app',
   canonical = 'https://ucsc.app',
+  schema,
 }: PageMetaProps) {
+  // Inject JSON-LD schema when page meta changes
+  useEffect(() => {
+    if (schema) {
+      clearSchemas();
+      injectSchema(schema);
+    }
+  }, [schema]);
+
   return (
     <Helmet>
       <title>{title} | UCSC.app</title>

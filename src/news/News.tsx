@@ -9,6 +9,7 @@ import NewsSidebar from "./NewsSidebar";
 import NewsFilter from "./NewsFilter";
 import { Loading } from "../components/loading/Loading";
 import { usePageMeta } from "../hooks/usePageMeta.tsx";
+import { generateNewsArticleSchema } from "../utils/schema";
 import "./News.css";
 
 type FeedItem = {
@@ -35,12 +36,19 @@ const FEEDS = [
 export default function RssFeed() {
 	const ctx = useContext(Context);
 
+	const newsSchema = generateNewsArticleSchema(
+		'UCSC Campus News',
+		'Stay updated with UC Santa Cruz campus news. Browse articles about campus life, events, research, and student experience.',
+		new Date().toISOString()
+	);
+
 	usePageMeta({
 		title: 'Campus News',
 		description: 'Stay updated with UC Santa Cruz campus news. Browse articles about campus life, events, research, and student experience.',
 		keywords: 'UCSC news, campus news, UC Santa Cruz updates, student experience',
 		ogUrl: 'https://ucsc.app/news',
 		canonical: 'https://ucsc.app/news',
+		schema: newsSchema,
 	});
 
 	const [selectedFeeds, setSelectedFeeds] = useState<string[]>(() => {
@@ -84,7 +92,6 @@ export default function RssFeed() {
 				setSelectedItems([].concat(...results) as FeedItem[]);
 			} catch (error) {
 				setError(true);
-				console.error("Failed to fetch feeds:", error);
 			} finally {
 				setLoading(false);
 			}

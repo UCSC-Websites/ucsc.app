@@ -9,6 +9,7 @@ import Filters from "./Filters.tsx";
 import { BASE_API_URL } from "../constants.ts";
 import { Loading } from "../components/loading/Loading.tsx";
 import { usePageMeta } from "../hooks/usePageMeta.tsx";
+import { generateCourseSchema } from "../utils/schema";
 
 import "./styles/Courses.css";
 
@@ -76,12 +77,18 @@ export default function Courses() {
 
 	const abortControllerRef = useRef<AbortController | null>(null);
 
+	const courseSchema = generateCourseSchema(
+		'Find UCSC Courses',
+		'Search and register for UC Santa Cruz courses. Find classes by department, catalog number, time, and more.'
+	);
+
 	usePageMeta({
 		title: 'Courses',
 		description: 'Search and register for UC Santa Cruz courses. Find classes by department, catalog number, time, and more.',
 		keywords: 'UCSC courses, course search, course registration, UC Santa Cruz classes',
 		ogUrl: 'https://ucsc.app/courses',
 		canonical: 'https://ucsc.app/courses',
+		schema: courseSchema,
 	});
 
 	async function fetchCourses(inputData: {
@@ -102,7 +109,7 @@ export default function Courses() {
 			setCourses(data);
 		} catch (error) {
 			if (error instanceof Error && error.name !== "AbortError") {
-				console.error("Failed to fetch courses:", error);
+				// Handle fetch error silently
 			}
 		} finally {
 			setLoading(false);

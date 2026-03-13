@@ -77,31 +77,17 @@ export type Menu = Record<string, Meal>
 // }
 
 export async function getAllLocationMenus(day_offset: number = 0, signal?: AbortSignal): Promise<Record<string, Menu>> {
-    const startTime = new Date();
-    const dateString = new Date(Date.now() + day_offset * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-
-    // const cachedMenu = await getCachedMenu(dateString);
-    // if (cachedMenu) {
-    //     console.log('Using cached menu for day offset:', day_offset);
-    //     return cachedMenu;
-    // }
-    console.log('Date string:', dateString);
-
     const locationMenus: Record<string, Menu> = await fetch(BASE_API_URL + '/menu?dayOffset=' + day_offset, { signal }).then(async (response) => {
         if (!response.ok) {
             throw new Error('Failed to fetch menu: ' + response.statusText);
         }
         return await response.json();
-    }).catch((error) => {
-        console.error('Error fetching menu: ' + error);
+    }).catch(() => {
+        // Handle error silently
     });
     if (!locationMenus) {
         return {};
     }
-    const endTime = new Date();
-    const timeDiff = endTime.getTime() - startTime.getTime();
-    console.log('Seconds to fetch all menus:', timeDiff / 1000);
-    // setCachedMenu(dateString, locationMenus);
     return locationMenus;
 }
 

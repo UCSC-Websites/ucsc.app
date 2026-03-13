@@ -10,6 +10,7 @@ import '../components/loading/Loading.css';
 import {Error, Loading} from "../components/loading/Loading";
 import {useContext, useEffect, useState} from "react";
 import { usePageMeta } from "../hooks/usePageMeta.tsx";
+import { generateLocalBusinessSchema } from "../utils/schema";
 
 const dayOffsetCount = 7; // Number of days to fetch menus for
 
@@ -19,12 +20,20 @@ export default function MenuPage() {
     const [loading, setLoading] = useState(true);
     const [error] = useState(false);
 
+    // Create dining location schema
+    const diningSchema = generateLocalBusinessSchema(
+        'UCSC Dining Services',
+        'Explore UC Santa Cruz dining options and meal menus at all campus locations.',
+        '1156 High Street, Santa Cruz, CA'
+    );
+
     usePageMeta({
         title: 'Dining & Menu',
         description: 'Explore UC Santa Cruz dining options and meal menus. Check what\'s available at all campus dining locations.',
         keywords: 'UCSC dining, campus menu, dining options, food services, UC Santa Cruz',
         ogUrl: 'https://ucsc.app/menu',
         canonical: 'https://ucsc.app/menu',
+        schema: diningSchema,
     });
 
     useEffect(() => {
