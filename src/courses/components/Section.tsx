@@ -22,7 +22,14 @@ export default function Section({ section }: { section: SecondarySection }) {
 	const courseCtx = useContext(CourseContext);
 	if (!courseCtx!.details.secondary_sections) return (<></>);
 	const sectionType = section.component == 'Seminar' ? 'SEM' : 'DISC';
-	const title = `${statusEmoji(section.enrl_status)} ${sectionType}-${section.class_section}`;
+
+	//! makes it a boolean with opposite truth
+	//!! makes it a boolean with the same truth (!!meetings = meetings exist)
+	//!!! makes it a boolean with the opposite truth (!!!section.meetings does not exist)
+	const isSectionCancelled = !!!section.meetings; 
+	
+	const emoji = isSectionCancelled ? '❌' : statusEmoji(section.enrl_status);
+	const title = `${emoji} ${sectionType}-${section.class_section}`;
 
 	return (
 		<div className="section-card">
