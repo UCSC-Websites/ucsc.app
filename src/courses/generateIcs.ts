@@ -1,5 +1,7 @@
 import { DetailedClassInfo, Meeting } from "../types";
 
+// note: backend has an endpoints /terms that automatically returns a list of term numbers (eg 2248, 2250, etc.)
+// could maybe extend that to accept an additional parameter to return start and end dates, and then replace this hardcoded thing here
 const TERM_DATES: Record<string, { start: string; end: string }> = {
 	"2248": { start: "20240923", end: "20241208" }, // Fall 2024
 	"2250": { start: "20250106", end: "20250316" }, // Winter 2025
