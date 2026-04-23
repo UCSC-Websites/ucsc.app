@@ -5,24 +5,41 @@ import MeetingInfo from "./MeetingInfo";
 import { statusEmoji } from "../StatusEmoji";
 
 /* a class has multiple discussion sections. Each discussion section can have multiple meeting times */
+/* 
+update 4/23/26: if a discussion section has no meeting times, pisa displays its time as "Canceled Canceled" (see 
+arden cse114a spring 2026). If there's no meeting info, the only information that can be displayed about the section is the emoji
+and the number enroleld (most likely gonna be 0/0)
+*/
+function Cancelled() {
+	return (
+		<p style={{marginTop: 2, marginBottom: 5}}>
+			Cancelled
+		</p>
+	)
+}
 
 export default function Section({ section }: { section: SecondarySection }) {
 	const courseCtx = useContext(CourseContext);
 	if (!courseCtx!.details.secondary_sections) return (<></>);
-	const text = `${statusEmoji(section.enrl_status)} Enrolled: ${section.enrl_total}/${section.capacity}`;
+	const sectionType = section.component == 'Seminar' ? 'SEM' : 'DISC';
+	const title = `${statusEmoji(section.enrl_status)} ${sectionType}-${section.class_section}`;
 
 	return (
 		<div className="section-card">
 			<div className="section-card2">
 				<div className="SectionInformation">
-					<div style={{ marginBottom: "10px" }}>
-						<p style={{ margin: "-8px 0" }}>
-							{text}
+					<div style={{ marginBottom: "0px" }}>
+						<b style={{ margin: "-8px 0", marginLeft: "-2px" }}>
+							{title}
+						</b>
+						<br />
+						<p style={{margin: 0, fontSize: 15}}>
+							<b>Enrolled:</b> {`${section.enrl_total}/${section.capacity}`}
 						</p>
 					</div>
 
 					<div>
-						{section.meetings.map((m: Meeting, _: number) => (<MeetingInfo meeting={m}/>))}
+						{section.meetings ? section.meetings.map((m: Meeting, _: number) => (<MeetingInfo meeting={m}/>)) : (<Cancelled />)}
 					</div>
 				</div>
 

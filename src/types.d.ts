@@ -27,6 +27,7 @@ export type DetailedClassInfo = {
 	meetings: Meeting[]
 	secondary_sections: SecondarySection[]
 	notes: string[]
+	combined_sections: SecondarySection[] // some classes have "combined sections", eg ANTH-196G Spring 2026
 }
 
 export type PrimarySection = {

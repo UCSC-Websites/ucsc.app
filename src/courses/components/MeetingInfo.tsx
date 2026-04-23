@@ -2,7 +2,7 @@ import { Instructor, Meeting } from "../../types";
 
 export default function MeetingInfo({ meeting }: { meeting: Meeting }) {
 	return (
-		<div style={{marginTop: "0px", marginBottom: "8px"}}>
+		<div style={{marginTop: "0px", marginBottom: "8px", fontSize: 15}}>
 			<p style={{margin: "2px 0"}}>
 				<strong>Instructor:</strong>{" "}{meeting.instructors.map((i: Instructor) => i.name).join(', ')}
 			</p>

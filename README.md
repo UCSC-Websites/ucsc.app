@@ -62,8 +62,6 @@ ucsc.app/
 │   ├── menu/             # Dining menu pages
 │   ├── news/             # News feed pages
 │   ├── schedules/        # Schedule and map pages
-│   ├── utils/            # Utility functions (schema, etc.)
-│   └── hooks/            # Custom React hooks
 └─ backend/             # FastAPI backend
    ├── endpoints/         # API route handlers
    ├── locations/         # Location and building data
