@@ -148,8 +148,15 @@ async def CacheMenus() -> None:
 	print("Caching menus...")
 	startTime: datetime = datetime.now()
 
-	async with httpx.AsyncClient() as client:
-		tasks: list = [get_all_menus(client, i) for i in range(8)]
+	# limit number of concurrent requests because otherwise several of them will fail and
+	# httpx will timeout
+	semaphore: asyncio.Semaphore = asyncio.Semaphore(5) 
+	async def fetchWithLimit(client, day):
+		async with semaphore:
+			return await get_all_menus(client, day)
+
+	async with httpx.AsyncClient(timeout=30.0) as client:
+		tasks: list = [fetchWithLimit(client, i) for i in range(8)]
 		results: list = await asyncio.gather(*tasks)
 		data: dict[int, dict] = dict(enumerate(results))
 	
