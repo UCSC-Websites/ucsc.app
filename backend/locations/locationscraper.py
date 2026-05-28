@@ -1,39 +1,7 @@
-import requests, bs4, re, sqlite3, json
+import re, sqlite3, json, pickle, zlib, base64, os
 from tqdm import tqdm
-import argparse
 from typing import NamedTuple, TypedDict, cast, Literal
 
-URL: str = "https://pisa.ucsc.edu/class_search/index.php"
-HEADERS: dict[str, str] = {
-	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
-	"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-	"Accept-Language": "en-US,en;q=0.5",
-	"Sec-GPC": "1",
-	"Upgrade-Insecure-Requests": "1",
-	"Sec-Fetch-Dest": "document",
-	"Sec-Fetch-Mode": "navigate",
-	"Sec-Fetch-Site": "same-origin",
-	"Sec-Fetch-User": "?1",
-	"Content-Type": "application/x-www-form-urlencoded",
-	"Priority": "u=0, i",
-	"Pragma": "no-cache",
-	"Cache-Control": "no-cache",
-	"Referer": "https://pisa.ucsc.edu/class_search/index.php"
-}
-body: dict[str, str] = {
-	'action': 'update_segment', 
-	'binds[:term]': '2048', 
-	'binds[:reg_status]': 'all', 
-	'binds[:catalog_nbr_op]': '=', 
-	'binds[:instr_name_op]': '=', 
-	'binds[:crse_units_op]': '=', 
-	'binds[:asynch]': 'A',
-	'binds[:hybrid]': 'H', 
-	'binds[:synch]': 'S',
-	'binds[:person]': 'P',
-	'rec_start': '0', 
-	'rec_dur': '10000'
-}
 dayToID: dict[str, int] = {
 	'M': 0,
 	'Tu': 1,
@@ -98,36 +66,6 @@ def convertTo24hr(timeStr: str) -> str:
         hour = 0
     
     return f"{hour:02d}:{minute}:00"
-
-def scrapePanel(panel) -> ClassDict:
-	classData: ClassDict = cast(ClassDict, {})
-	p = panel.find(class_="panel-body").find(class_="row").find_all("div")
-	header = panel.find(class_="panel-heading panel-heading-custom").find("h2")
-	aTag = header.find("a")
-
-	classData["class_number"] = p[0].find('a').text.strip()
-	classData["name"] = aTag.text.replace('\xa0\xa0\xa0', ' ').strip()
-	classData["link"] = aTag.get("href")
-	classData["instructor"] = p[1].text.replace("Instructor: ", "").strip()
-
-	# the third div under <div class="row"> is the parent for the time and locations
-	# the first child will be the location, the second will be the time, 
-	# the third will be the next location, the fourth will be the time for that location, and so on
-	classData["meetings"] = []
-	timeAndLocations = p[2].find_all("div")
-
-	for i in range(0, len(timeAndLocations), 2):
-		location: str = timeAndLocations[i].text.replace("Location: ", "").strip()[5:] #to remove the "SEM: "/"LEC: "
-		time: str = timeAndLocations[i+1].text.replace("Day and Time: ", "").strip()
-
-		# if a class/section is cancelled, location is empty and the time is "Cancelled Canceled"
-		if not location: continue
-
-		classData["meetings"].append(MeetingRaw(location, time))
-
-	
-
-	return classData
 
 def isValidLocation(location: str) -> bool:
 	if (
@@ -262,10 +200,84 @@ def insertMeetingIntoTable(m: Meeting, term: int, classID: str, cursor: sqlite3.
 		ON CONFLICT DO NOTHING
 	''', (term, classID, locationID, timeBlockID))
 
+def readBin(filePath: str) -> list[dict]:
+    with open(filePath, 'rb') as file:
+        compressedData: bytes = pickle.load(file)
+    
+    decompressed: bytes = zlib.decompress(compressedData)
+    return json.loads(decompressed.decode('utf-8'))    
+
+def generatePisaLink(term: int, classID: str) -> str:
+	b: bytes = base64.b64encode(f'a:2:{{s:5:":STRM";s:4:"{term}";s:10:":CLASS_NBR";s:5:"{classID}";}}'.encode('ascii'))
+	return f"https://pisa.ucsc.edu/class_search/index.php?action=detail&class_data={b.decode('ascii')}"
+
+def processAPIResponse(term: int, data: dict) -> ClassDict:
+	ps: dict = data["primary_section"]
+	classData: dict = {
+		"class_number": ps["class_nbr"],
+		"name": f"{ps['subject']} {ps['catalog_nbr']} - {ps['class_section']} {ps['title']}",
+		"link": generatePisaLink(term, ps["class_nbr"]),
+		"meetings": []
+	}
+
+	instructors: set[str] = set()
+	if "meetings" in data:
+		for meeting in data["meetings"]:
+			classData["meetings"].append({
+				"days": meeting["days"],
+				"start_time": meeting["start_time"],
+				"end_time": meeting["end_time"],
+				"location": meeting["location"]
+			})
+
+			for instructor in meeting["instructors"]:
+				instructors.add(instructor["name"])
+		
+	classData["instructor"] = ', '.join(list(instructors))
+
+	#if no discussion sections, do nothing
+	# if "secondary_sections" not in data or len(data["secondary_sections"]) == 0:
+	# 	return classData
+	
+	sections: list = []
+	if "secondary_sections" in data:
+		for section in data["secondary_sections"]:
+			s = {
+				"class_number": section["class_nbr"],
+				"component": section["component"],
+				"class_section": section["class_section"],
+				"meetings": [] # fuck discussion sections for having multiple possible meeting times.
+			}
+
+			#if a discussion section is cancelled, it wont have a meetings array 
+			#see ASTR-3 Fall 2004 section 1D
+			if "meetings" not in section: continue
+
+			for meeting in section["meetings"]:
+				#during COVID, discussion sections had "TBA" as their location for some reason 
+				#see class ID 24825 in term 2208 for an example
+				if meeting["days"] == "TBA" or meeting["start_time"] == "TBA" or meeting["end_time"] == "TBA" or meeting["location"] == "TBA":
+					continue
+
+				s["meetings"].append({
+					"days": meeting["days"],
+					"start_time": meeting["start_time"],
+					"end_time": meeting["end_time"],
+					"location": meeting["location"],
+				})
+			
+			sections.append(s)
+
+	classData["sections"] = sections
+
+	# print(classNum, sections)
+	return cast(ClassDict, classData)
 
 def getClassLocationsForTerm(term: int) -> None:
-	with open(f"locations/classes/{term}.json", "r", encoding="utf-8") as file:
-		allClasses: list[ClassDict] = json.load(file)
+	# with open(f"locations/classes/{term}.json", "r", encoding="utf-8") as file:
+	# 	allClasses: list[ClassDict] = json.load(file)
+	allAPIResponsesRaw: list[dict] = readBin(f"locations/compressed/{term}.bin")
+	allClasses: list[ClassDict] = [processAPIResponse(term, a) for a in allAPIResponsesRaw if a]
 
 	# a class has its parent field set to null
 	# a discussion section has its pisaLink field set to null, and the parent field set to another class
@@ -281,9 +293,6 @@ def getClassLocationsForTerm(term: int) -> None:
 	# 	insert that class's meetings and locations into the table, if they exist
 	# 	if it has sections, insert those into the table 
 
-	# soup = bs4.BeautifulSoup(responseText, 'lxml')
-	# panels = soup.find_all(class_="panel panel-default row")
-
 	conn: sqlite3.Connection = sqlite3.connect('locations/locations.db')
 	cursor: sqlite3.Cursor = conn.cursor()
 
@@ -291,14 +300,8 @@ def getClassLocationsForTerm(term: int) -> None:
 		classData["meetings"] = [m for m in classData["meetings"] if isValidTime(m["start_time"]) and isValidLocation(m["location"])] #some classes dont have a time
 		
 		if len(classData["meetings"]) == 0 and len(classData["sections"]) == 0: continue
+	
 		# start inserting shit into the db
-
-		cursor.execute('SELECT * FROM class WHERE term = ? AND classID = ?', 
-               (term, classData["class_number"]))
-		existing = cursor.fetchone()
-		if existing:
-			print(f"Already exists: {existing}")
-		
 		#insert class
 		cursor.execute('''
 			INSERT INTO class(term, classID, pisaLink, name, instructor) 
@@ -348,7 +351,8 @@ if __name__ == "__main__":
 	# parser = argparse.ArgumentParser()
 	# parser.add_argument('-l', '--local', action='store_true', help='Scrape from local HTML files instead of making HTTP requests')
 	# args = parser.parse_args()
+	terms: list[int] = [int(f[0:-4]) for f in os.listdir('./locations/compressed/') if f.endswith('.bin')]
 
 	CURRENT_TERM: int = 2268
-	for term in tqdm(range(2048, CURRENT_TERM + 2, 2)):
+	for term in tqdm(terms):
 		getClassLocationsForTerm(term)

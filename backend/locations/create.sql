@@ -8,7 +8,7 @@ CREATE TABLE class (
 	instructor VARCHAR(100),
 
 	parent INTEGER, -- a discussion section is just a class. if this field is null, its a class, otherwise
-	                                 -- it points to the ID of the class its associated with
+	                -- it points to the ID of the class its associated with
 
 	PRIMARY KEY (term, classID)
 	-- FOREIGN KEY (discussionSectionParent) REFERENCES class(id)
